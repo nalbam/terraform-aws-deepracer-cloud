@@ -52,7 +52,7 @@ variable "delete_on_termination" {
 
 variable "associate_public_ip_address" {
   type    = bool
-  default = false
+  default = true
 }
 
 variable "min" {
