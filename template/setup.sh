@@ -44,7 +44,8 @@ cat /etc/docker/daemon.json | jq --arg graph /data/docker_dir '. + {graph: $grap
 systemctl restart docker
 lsblk
 
+apt-get install -y git vim tmux nmon
+
 runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
 runuser -l ubuntu -c "cd ~/deepracer-for-cloud && ./bin/prepare.sh"
-
-reboot now
+runuser -l ubuntu -c "sudo reboot now"

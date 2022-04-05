@@ -1,1 +1,103 @@
 # terraform-aws-deepracer-local
+
+* <https://mungi.notion.site/DRfC-in-AWS-g4dn-2xlarge-c908e42f16324a6492f67d4d40b61f31>
+
+## init.sh 실행
+
+```bash
+cd ~/deepracer-for-cloud
+
+# cat <<'EOF' > defaults/dependencies.json
+# {
+#     "master_version": "5.0",
+#     "containers": {
+#         "rl_coach": "5.0.0",
+#         "robomaker": "5.0.1",
+#         "sagemaker": "5.0.0"
+#     }
+# }
+# EOF
+
+./bin/init.sh -c aws -a gpu
+```
+
+## 환경 변수 설정 및 실행
+
+```bash
+ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
+
+cd ~/deepracer-for-cloud
+
+# 훈련 환경 설정 : run.env
+DR_WORLD_NAME="2022_april_pro"
+DR_LOCAL_S3_MODEL_PREFIX="DR-2204-PRO-A-1"
+DR_LOCAL_S3_PRETRAINED="False"
+
+sed -i  "s/\(^DR_WORLD_NAME=\)\(.*\)/\1$DR_WORLD_NAME/" run.env
+sed -i  "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$DR_LOCAL_S3_MODEL_PREFIX/" run.env
+sed -i  "s/\(^DR_LOCAL_S3_PRETRAINED=\)\(.*\)/\1$DR_LOCAL_S3_PRETRAINED/" run.env
+
+# 시스템 환경 설정 변경 : system.env
+DR_AWS_APP_REGION="us-west-2"
+DR_LOCAL_S3_PROFILE="default"
+DR_UPLOAD_S3_PROFILE="default"
+DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
+DR_UPLOAD_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-upload"
+DR_DOCKER_STYLE="compose"
+DR_SAGEMAKER_IMAGE="5.0.0-gpu"
+DR_ROBOMAKER_IMAGE="5.0.1-gpu"   # 5.0.1-gpu-gl
+DR_COACH_IMAGE="5.0.0"
+DR_WORKERS="6"                   # 동시 실행 Worker 개수, 대충 4vCPU당 RoboMaker 1개 정도 수행 가능 + Sagemaker 4vCPU
+DR_GUI_ENABLE="False"            # 활성화시 Worker Gagebo에 VNC로 GUI 접속 가능, PW 없음 => CPU 추가 사용하며,볼일이 없으므로 비활성 권장
+DR_KINESIS_STREAM_ENABLE="True"  # 활성화시 경기 합성 화면 제공 => CPU 추가 사용하지만, 보기편하므로 활성
+DR_KINESIS_STREAM_NAME=""
+
+sed -i "s/\(^DR_AWS_APP_REGION=\)\(.*\)/\1$DR_AWS_APP_REGION/"       system.env
+sed -i "s/\(^DR_LOCAL_S3_PROFILE=\)\(.*\)/\1$DR_LOCAL_S3_PROFILE/"   system.env
+sed -i "s/\(^DR_LOCAL_S3_BUCKET=\)\(.*\)/\1$DR_LOCAL_S3_BUCKET/"     system.env
+sed -i "s/\(^DR_UPLOAD_S3_PROFILE=\)\(.*\)/\1$DR_UPLOAD_S3_PROFILE/" system.env
+sed -i "s/\(^DR_UPLOAD_S3_BUCKET=\)\(.*\)/\1$DR_UPLOAD_S3_BUCKET/"   system.env
+sed -i "s/\(^DR_DOCKER_STYLE=\)\(.*\)/\1$DR_DOCKER_STYLE/"           system.env
+sed -i "s/\(^DR_SAGEMAKER_IMAGE=\)\(.*\)/\1$DR_SAGEMAKER_IMAGE/"     system.env
+sed -i "s/\(^DR_ROBOMAKER_IMAGE=\)\(.*\)/\1$DR_ROBOMAKER_IMAGE/"     system.env
+sed -i "s/\(^DR_COACH_IMAGE=\)\(.*\)/\1$DR_COACH_IMAGE/"             system.env
+sed -i "s/\(^DR_WORKERS=\)\(.*\)/\1$DR_WORKERS/"                     system.env
+sed -i "s/\(^DR_GUI_ENABLE=\)\(.*\)/\1$DR_GUI_ENABLE/"               system.env
+sed -i "s/\(^DR_KINESIS_STREAM_ENABLE=\)\(.*\)/\1$DR_KINESIS_STREAM_ENABLE/" system.env
+sed -i "s/\(^DR_KINESIS_STREAM_NAME=\)\(.*\)/\1$DR_KINESIS_STREAM_NAME/"     system.env
+
+sed -i "s/.*CUDA_VISIBLE_DEVICES.*/CUDA_VISIBLE_DEVICES=0/" system.env
+
+echo -e "\n" >> system.env
+
+cat <<EOF >>system.env
+DR_LOCAL_S3_PREFIX=drfc-1
+DR_UPLOAD_S3_PREFIX=drfc-1
+EOF
+```
+
+## 실행
+
+```bash
+cd ~/deepracer-for-cloud
+
+source bin/activate.sh
+
+FILENAME="custom_files/hyperparameters.json"
+jq '.discount_factor = 0.95' $FILENAME > tmp.$$.json && mv tmp.$$.json $FILENAME
+cat $FILENAME | jq
+
+FILENAME="custom_files/model_metadata.json"
+sed -i 's/\"speed\":.*/\"speed\": 1.4/' custom_files/model_metadata.json
+cat $FILENAME | jq
+
+
+tmux new -s deepracer
+
+# 업데이트 및 훈련 시작
+dr-update && dr-upload-custom-files && dr-start-training -w
+
+# tmux 화면을 3 등분 하고 나머지 하나에서 모니터링과 커맨드 수행
+# 브라우저에서 8100 포트로 접속해보자 DR_KINESIS_STREAM_ENABLE가 True 일 때만 가능하다.
+dr-stop-viewer && dr-start-viewer
+```
