@@ -31,21 +31,18 @@ bucket_upload = "aws-deepracer-123456789012-upload"
 public_ip = "54.69.00.00"
 ```
 
+## 인스턴스 생성 후 로그
+
+> 생성 후 바로 접속하면, 초기화 진행 중 입니다. 아래명령어로 진행 상황을 알 수 있습니다..
+
+```bast
+tail -f /var/log/user-data.log
+```
+
 ## init.sh 실행
 
 ```bash
 cd ~/deepracer-for-cloud
-
-# cat <<'EOF' > defaults/dependencies.json
-# {
-#     "master_version": "5.0",
-#     "containers": {
-#         "rl_coach": "5.0.0",
-#         "robomaker": "5.0.1",
-#         "sagemaker": "5.0.0"
-#     }
-# }
-# EOF
 
 ./bin/init.sh -c aws -a gpu
 ```
