@@ -2,6 +2,9 @@
 
 * <https://mungi.notion.site/DRfC-in-AWS-g4dn-2xlarge-c908e42f16324a6492f67d4d40b61f31>
 
+> 위 문서를 참고하여 만들었습니다.
+> 이 테라폼을 실행 하면, 위 문서의 `prepare.sh 실행` 까지 실행 됩니다.
+
 ## init.sh 실행
 
 ```bash
@@ -74,6 +77,8 @@ cat <<EOF >>system.env
 DR_LOCAL_S3_PREFIX=drfc-1
 DR_UPLOAD_S3_PREFIX=drfc-1
 EOF
+
+aws s3 ls | grep deepracer
 ```
 
 ## 실행
@@ -83,15 +88,8 @@ cd ~/deepracer-for-cloud
 
 source bin/activate.sh
 
-FILENAME="custom_files/hyperparameters.json"
-jq '.discount_factor = 0.95' $FILENAME > tmp.$$.json && mv tmp.$$.json $FILENAME
-cat $FILENAME | jq
-
-FILENAME="custom_files/model_metadata.json"
-sed -i 's/\"speed\":.*/\"speed\": 1.4/' custom_files/model_metadata.json
-cat $FILENAME | jq
-
-
+# 장시간이므로 터미널을 끊고 나와야 하므로 가능하면 tmux에서 실행하자.
+# 끊어도 계속 실행이 되긴 하지만 로그등 터미널 레이아웃 유지를 위해 권장
 tmux new -s deepracer
 
 # 업데이트 및 훈련 시작
