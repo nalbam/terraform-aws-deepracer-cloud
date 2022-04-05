@@ -12,6 +12,14 @@
 ```bash
 ./replace.sh
 
+# ACCOUNT_ID = 123456789012
+# REGION = us-west-2
+# BUCKET = terraform-workshop-123456789012
+```
+
+## terraform apply
+
+```bash
 terraform apply
 
 # ...
