@@ -11,6 +11,16 @@
 
 ```bash
 ./replace.sh
+
+terraform apply
+
+# ...
+
+Outputs:
+
+bucket_local = "aws-deepracer-123456789012-local"
+bucket_upload = "aws-deepracer-123456789012-upload"
+public_ip = "54.69.00.00"
 ```
 
 ## init.sh 실행
