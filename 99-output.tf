@@ -9,5 +9,5 @@ data "aws_instances" "worker" {
 }
 
 output "worker_ips" {
-  value = data.aws_instances.worker.private_ips
+  value = data.aws_instances.worker.public_ips
 }

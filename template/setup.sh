@@ -22,3 +22,29 @@ EOF
 
 # runuser -l ec2-user -c "curl -sL opspresso.github.io/toaster/install.sh | bash"
 # runuser -l ec2-user -c "curl -sL opspresso.github.io/tools/install.sh | bash"
+
+sgdisk --zap-all /dev/nvme1n1
+parted -s /dev/nvme1n1 mklabel gpt
+parted -s /dev/nvme1n1 mkpart primary 1MiB 1025MiB
+parted -s /dev/nvme1n1 align-check optimal 1
+parted -s /dev/nvme1n1 resizepart 1 100%
+mkfs.xfs /dev/nvme1n1p1 -f -L Data-Disk
+
+mkdir -p /data
+
+cat <<EOF | tee -a /etc/fstab
+LABEL=Data-Disk    /data    xfs    defaults,nofail  1  0
+EOF
+
+chown -R ubuntu:ubuntu /data
+mount -a
+
+mkdir -p /data/docker_dir
+cat /etc/docker/daemon.json | jq --arg graph /data/docker_dir '. + {graph: $graph}' | tee /etc/docker/daemon.json
+systemctl restart docker
+lsblk
+
+runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
+runuser -l ubuntu -c "cd ~/deepracer-for-cloud && ./bin/prepare.sh"
+
+reboot now
