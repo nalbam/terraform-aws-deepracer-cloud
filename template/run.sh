@@ -102,13 +102,13 @@ EOF
 }
 
 case ${CMD} in
-init)
+i | init)
   _init
   ;;
-backup)
+b | backup)
   _backup
   ;;
-restore)
+r | restore)
   _restore
   ;;
 *)
