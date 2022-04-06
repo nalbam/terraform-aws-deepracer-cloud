@@ -7,10 +7,18 @@ exec > /var/log/user-data.log 2>&1
 cat <<EOF | tee -a /etc/motd
 #########################################################
 
-#  Initialization is still in progress.
-#  When initialization is complete, it will reboot.
-
 tail -f -n 1000 /var/log/user-data.log
+
+cd ~/deepracer-for-cloud
+
+source ./bin/activate.sh
+
+dr-update && dr-upload-custom-files && dr-start-training -w
+
+dr-stop-training
+dr-increment-training -f
+
+dr-stop-viewer && dr-start-viewer
 
 #########################################################
 EOF
@@ -38,10 +46,8 @@ lsblk
 
 apt-get install -y git vim tmux nmon
 
-runuser -l ubuntu -c "curl -fsSL -o ~/.runonce.sh.env https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/run.sh"
-runuser -l ubuntu -c "crontab -l > mycron && echo '@reboot bash ~/.runonce.sh.env' >> mycron && crontab mycron && rm mycron"
+runuser -l ubuntu -c "curl -fsSL -o ~/run.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/run.sh"
+runuser -l ubuntu -c "chmod 755 ~/run.sh"
 
 runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
 runuser -l ubuntu -c "cd ~/deepracer-for-cloud && ./bin/prepare.sh"
-
-# runuser -l ubuntu -c "sudo reboot now"

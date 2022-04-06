@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-if [ -f ~/.autostarted ]; then
-  exit 0
-fi
-
 pushd ~/deepracer-for-cloud
 
 # ./bin/init.sh -c aws -a gpu
@@ -62,22 +58,5 @@ DR_UPLOAD_S3_PREFIX=drfc-1
 EOF
 
 popd
-
-cat <<EOF | sudo tee -a /etc/motd
-#########################################################
-
-cd ~/deepracer-for-cloud
-
-source ./bin/activate.sh
-
-dr-update && dr-upload-custom-files && dr-start-training -w
-
-dr-stop-training
-dr-increment-training -f
-
-dr-stop-viewer && dr-start-viewer
-
-#########################################################
-EOF
 
 touch ~/.autostarted
