@@ -4,7 +4,7 @@
 set -x
 exec > /var/log/user-data.log 2>&1
 
-cat <<EOF > /etc/motd
+cat <<EOF | tee -a /etc/motd
 #########################################################
 
 #  아직 초기화가 진행중입니다.

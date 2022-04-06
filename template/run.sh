@@ -63,7 +63,7 @@ EOF
 
 popd
 
-sudo bash -c 'cat <<EOF > /etc/motd
+cat <<EOF | sudo tee -a /etc/motd
 #########################################################
 
 cd ~/deepracer-for-cloud
@@ -78,6 +78,6 @@ dr-increment-training -f
 dr-stop-viewer && dr-start-viewer
 
 #########################################################
-EOF'
+EOF
 
 touch ~/.autostarted
