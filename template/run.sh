@@ -10,6 +10,8 @@ fi
 
 pushd ~/deepracer-for-cloud
 
+./bin/init.sh -c aws -a gpu
+
 ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
 
 RL_COACH=$(cat defaults/dependencies.json | jq .containers.rl_coach -r)
@@ -62,5 +64,7 @@ cat <<EOF >>system.env
 DR_LOCAL_S3_PREFIX=drfc-1
 DR_UPLOAD_S3_PREFIX=drfc-1
 EOF
+
+# source ./bin/activate.sh
 
 popd
