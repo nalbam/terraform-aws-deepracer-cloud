@@ -107,6 +107,8 @@ aws s3 ls | grep deepracer
 # 끊어도 계속 실행이 되긴 하지만 로그등 터미널 레이아웃 유지를 위해 권장
 tmux new -s deepracer
 
+cd ~/deepracer-for-cloud
+
 # 업데이트 및 훈련 시작
 dr-update && dr-upload-custom-files && dr-start-training -w
 
