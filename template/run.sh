@@ -37,9 +37,9 @@ _restore() {
   aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/run.env ./
   aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/system.env ./
 
-  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/custom_files/hyperparameters.json ./custom_files/hyperparameters.json
-  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/custom_files/model_metadata.json ./custom_files/model_metadata.json
-  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/custom_files/reward_function.py ./custom_files/reward_function.py
+  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/custom_files/hyperparameters.json ./custom_files/
+  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/custom_files/model_metadata.json ./custom_files/
+  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/custom_files/reward_function.py ./custom_files/
 
   popd
 }
