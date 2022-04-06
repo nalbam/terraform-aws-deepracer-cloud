@@ -1,4 +1,4 @@
-# worker
+# aws_autoscaling_group
 
 resource "aws_autoscaling_group" "worker" {
   name_prefix = format("%s-", var.name)
@@ -6,7 +6,9 @@ resource "aws_autoscaling_group" "worker" {
   min_size = var.min
   max_size = var.max
 
-  vpc_zone_identifier = data.aws_subnets.default.ids
+  vpc_zone_identifier = local.subnet_ids
+
+  # load_balancers = [aws_lb_target_group.public_http.arn]
 
   launch_template {
     id      = aws_launch_template.worker.id

@@ -1,4 +1,4 @@
-# launch_template
+# aws_launch_template
 
 resource "aws_launch_template" "worker" {
   name_prefix = format("%s-", var.name)

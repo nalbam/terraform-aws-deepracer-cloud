@@ -33,7 +33,7 @@ public_ip = "54.69.00.00"
 
 ## 인스턴스 생성 후 로그
 
-> 생성 후 바로 접속하면, 초기화 진행 중 입니다. 아래명령어로 진행 상황을 알 수 있습니다..
+> 생성 후 바로 접속하면, 초기화가 진행 중 입니다. 아래 명령어로 진행 상황을 알 수 있습니다.
 
 ```bast
 tail -f -n 1000 /var/log/user-data.log
@@ -42,9 +42,9 @@ tail -f -n 1000 /var/log/user-data.log
 ## 환경 변수 설정 및 실행
 
 ```bash
-ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
-
 cd ~/deepracer-for-cloud
+
+ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
 
 RL_COACH=$(cat defaults/dependencies.json | jq .containers.rl_coach -r)
 SAGEMAKER=$(cat defaults/dependencies.json | jq .containers.sagemaker -r)
@@ -103,8 +103,6 @@ aws s3 ls | grep deepracer
 ## 실행
 
 ```bash
-cd ~/deepracer-for-cloud
-
 # 장시간이므로 터미널을 끊고 나와야 하므로 가능하면 tmux에서 실행하자.
 # 끊어도 계속 실행이 되긴 하지만 로그등 터미널 레이아웃 유지를 위해 권장
 tmux new -s deepracer

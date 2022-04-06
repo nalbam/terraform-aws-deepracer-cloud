@@ -9,8 +9,6 @@ cat <<EOF | tee -a /etc/motd
 
 tail -f -n 1000 /var/log/user-data.log
 
-cd ~/deepracer-for-cloud
-
 dr-update && dr-upload-custom-files && dr-start-training -w
 
 dr-stop-training

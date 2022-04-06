@@ -1,9 +1,9 @@
 # aws_security_group
 
 resource "aws_security_group" "worker" {
-  name = var.name
+  name = format("%s-worker", var.name)
 
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = local.vpc_id
 
   egress {
     from_port   = 0
