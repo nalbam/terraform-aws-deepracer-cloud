@@ -48,4 +48,6 @@ apt-get install -y git vim tmux nmon
 
 runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
 runuser -l ubuntu -c "cd ~/deepracer-for-cloud && ./bin/prepare.sh"
+runuser -l ubuntu -c "cd ~ && curl -fsSL -o run.sh https://github.com/$USERNAME/$REPONAME/releases/download/$VERSION/toaster "
+
 runuser -l ubuntu -c "sudo reboot now"
