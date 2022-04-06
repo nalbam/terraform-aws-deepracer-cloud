@@ -38,12 +38,8 @@ lsblk
 
 apt-get install -y git vim tmux nmon
 
-curl -fsSL -o /etc/init.d/dr-init https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/dr-init.sh
-chmod 755 /etc/init.d/dr-init
-update-rc.d dr-init defaults
-
-runuser -l ubuntu -c "curl -fsSL -o ~/run.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/run.sh"
-runuser -l ubuntu -c "chmod 755 ~/run.sh"
+runuser -l ubuntu -c "curl -fsSL -o ~/.runonce.sh.env https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/run.sh"
+runuser -l ubuntu -c "crontab -l > mycron && echo '@reboot bash ~/.runonce.sh.env' >> mycron && crontab mycron && rm mycron"
 
 runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
 runuser -l ubuntu -c "cd ~/deepracer-for-cloud && ./bin/prepare.sh"

@@ -6,7 +6,7 @@ fi
 
 pushd ~/deepracer-for-cloud
 
-./bin/init.sh -c aws -a gpu
+# ./bin/init.sh -c aws -a gpu
 
 ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
 
