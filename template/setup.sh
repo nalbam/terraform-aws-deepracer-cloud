@@ -46,11 +46,13 @@ lsblk
 
 apt-get install -y git vim tmux nmon
 
-curl -fsSL -o /etc/init.d/autostart.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/autostart.sh
-chmod 755 /etc/init.d/autostart.sh
-update-rc.d autostart.sh defaults
+# curl -fsSL -o /etc/init.d/autostart.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/autostart.sh
+# chmod 755 /etc/init.d/autostart.sh
+# update-rc.d autostart.sh defaults
 
 runuser -l ubuntu -c "curl -fsSL -o ~/run.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/run.sh"
+runuser -l ubuntu -c "echo 'bash ~/run.sh' >> ~/.bashrc"
+
 runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
 runuser -l ubuntu -c "cd ~/deepracer-for-cloud && ./bin/prepare.sh"
 
