@@ -113,7 +113,7 @@ aws s3 ls | grep deepracer
 ```bash
 cd ~/deepracer-for-cloud
 
-source bin/activate.sh
+source ~/deepracer-for-cloud/bin/activate.sh
 
 # 장시간이므로 터미널을 끊고 나와야 하므로 가능하면 tmux에서 실행하자.
 # 끊어도 계속 실행이 되긴 하지만 로그등 터미널 레이아웃 유지를 위해 권장
