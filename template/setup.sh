@@ -38,9 +38,9 @@ lsblk
 
 apt-get install -y git vim tmux nmon
 
-curl -fsSL -o /etc/init.d/autostart.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/autostart.sh
-chmod 755 /etc/init.d/autostart.sh
-update-rc.d autostart.sh defaults
+curl -fsSL -o /etc/init.d/dr-init https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/dr-init.sh
+chmod 755 /etc/init.d/dr-init
+update-rc.d dr-init defaults
 
 runuser -l ubuntu -c "curl -fsSL -o ~/run.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/run.sh"
 runuser -l ubuntu -c "chmod 755 ~/run.sh"
