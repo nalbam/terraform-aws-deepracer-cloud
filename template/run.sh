@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-pushd ~/deepracer-for-cloud
+if [ -f ~/.run.sh.done ]; then
+  exit 0
+fi
 
-# ./bin/init.sh -c aws -a gpu
+pushd ~/deepracer-for-cloud
 
 ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
 
@@ -59,4 +61,4 @@ EOF
 
 popd
 
-touch ~/.autostarted
+touch ~/.run.sh.done
