@@ -36,7 +36,7 @@ public_ip = "54.69.00.00"
 > 생성 후 바로 접속하면, 초기화 진행 중 입니다. 아래명령어로 진행 상황을 알 수 있습니다..
 
 ```bast
-tail -f /var/log/user-data.log
+tail -f -n 1000 /var/log/user-data.log
 ```
 
 ## 환경 변수 설정 및 실행
