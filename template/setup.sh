@@ -44,4 +44,4 @@ runuser -l ubuntu -c "crontab -l > mycron && echo '@reboot bash ~/.runonce.sh.en
 runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
 runuser -l ubuntu -c "cd ~/deepracer-for-cloud && ./bin/prepare.sh"
 
-runuser -l ubuntu -c "sudo reboot now"
+# runuser -l ubuntu -c "sudo reboot now"
