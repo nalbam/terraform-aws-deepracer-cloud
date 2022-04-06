@@ -3,7 +3,7 @@
 * <https://mungi.notion.site/DRfC-in-AWS-g4dn-2xlarge-c908e42f16324a6492f67d4d40b61f31>
 
 > 위 문서를 참고하여 만들었습니다.
-> 이 테라폼을 실행 하면, 위 문서의 `prepare.sh 실행` 까지 실행 됩니다.
+> 이 테라폼을 실행 하면, 위 문서의 `init.sh 실행` 까지 실행 됩니다.
 
 ## replace
 
@@ -37,14 +37,6 @@ public_ip = "54.69.00.00"
 
 ```bast
 tail -f /var/log/user-data.log
-```
-
-## init.sh 실행
-
-```bash
-cd ~/deepracer-for-cloud
-
-./bin/init.sh -c aws -a gpu
 ```
 
 ## 환경 변수 설정 및 실행
