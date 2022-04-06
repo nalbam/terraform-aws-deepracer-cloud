@@ -45,8 +45,4 @@ data "aws_ami" "default" {
 
 data "template_file" "setup" {
   template = file("template/setup.sh")
-
-  vars = {
-    HOSTNAME = var.name
-  }
 }

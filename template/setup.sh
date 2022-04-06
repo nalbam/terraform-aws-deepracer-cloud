@@ -4,24 +4,14 @@
 set -x
 exec > /var/log/user-data.log 2>&1
 
-hostname "${HOSTNAME}"
-
-rm -rf /etc/motd
 cat <<EOF > /etc/motd
-
 #########################################################
-#                                                       #
-#   모든 로그는 원격지 로그 서버에 저장되고 있습니다.   #
-#   비인가자의 경우 접속을 해지하여 주시기 바랍니다.    #
-#                                                       #
+#
+#  아직 초기화가 진행중 입니다.
+#  완료 되면 재부팅이 될 것입니다.
+#
 #########################################################
-
->> ${HOSTNAME} <<
-
 EOF
-
-# runuser -l ec2-user -c "curl -sL opspresso.github.io/toaster/install.sh | bash"
-# runuser -l ec2-user -c "curl -sL opspresso.github.io/tools/install.sh | bash"
 
 sgdisk --zap-all /dev/nvme1n1
 parted -s /dev/nvme1n1 mklabel gpt
@@ -51,6 +41,7 @@ chmod 755 /etc/init.d/autostart.sh
 update-rc.d autostart.sh defaults
 
 runuser -l ubuntu -c "curl -fsSL -o ~/run.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/run.sh"
+runuser -l ubuntu -c "chmod 755 ~/run.sh"
 
 runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
 runuser -l ubuntu -c "cd ~/deepracer-for-cloud && ./bin/prepare.sh"

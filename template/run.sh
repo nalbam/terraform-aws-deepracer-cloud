@@ -63,4 +63,21 @@ EOF
 
 popd
 
+sudo bash -c 'cat <<EOF > /etc/motd
+#########################################################
+
+cd ~/deepracer-for-cloud
+
+source ./bin/activate.sh
+
+dr-update && dr-upload-custom-files && dr-start-training -w
+
+dr-stop-training
+dr-increment-training -f
+
+dr-stop-viewer && dr-start-viewer
+
+#########################################################
+EOF'
+
 touch ~/.autostarted
