@@ -11,8 +11,6 @@ tail -f -n 1000 /var/log/user-data.log
 
 cd ~/deepracer-for-cloud
 
-source ./bin/activate.sh
-
 dr-update && dr-upload-custom-files && dr-start-training -w
 
 dr-stop-training
