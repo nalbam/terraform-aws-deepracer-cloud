@@ -7,8 +7,8 @@ exec > /var/log/user-data.log 2>&1
 cat <<EOF | tee -a /etc/motd
 #########################################################
 
-#  아직 초기화가 진행중입니다.
-#  완료하면 재부팅이 될 것입니다.
+#  Initialization is still in progress.
+#  When initialization is complete, it will reboot.
 
 tail -f -n 1000 /var/log/user-data.log
 
