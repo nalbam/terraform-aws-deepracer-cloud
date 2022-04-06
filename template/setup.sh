@@ -46,10 +46,8 @@ lsblk
 
 apt-get install -y git vim tmux nmon
 
-runuser -l ubuntu -c "cd ~ && wget https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/run.sh"
-runuser -l ubuntu -c "chmod 755 ~/run.sh"
-
-cp /home/ubuntu/run.sh /etc/init.d/autostart.sh
+wget https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/run.sh
+chmod 755 run.sh && cp run.sh /etc/init.d/autostart.sh
 update-rc.d autostart.sh defaults
 
 runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
