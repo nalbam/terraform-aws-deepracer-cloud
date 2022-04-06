@@ -122,6 +122,11 @@ tmux new -s deepracer
 # 업데이트 및 훈련 시작
 dr-update && dr-upload-custom-files && dr-start-training -w
 
+# 증가 실행
+dr-stop-training
+dr-increment-training -f
+dr-update && dr-upload-custom-files && dr-start-training -w
+
 # tmux 화면을 3 등분 하고 나머지 하나에서 모니터링과 커맨드 수행
 # 브라우저에서 8100 포트로 접속해보자 DR_KINESIS_STREAM_ENABLE가 True 일 때만 가능하다.
 dr-stop-viewer && dr-start-viewer
