@@ -2,7 +2,7 @@
 
 # Log everything we do.
 set -x
-exec > /var/log/user-data.log 2>&1
+exec >/var/log/user-data.log 2>&1
 
 cat <<EOF | tee -a /etc/motd
 #########################################################
@@ -40,7 +40,7 @@ cat /etc/docker/daemon.json | jq --arg graph /data/docker_dir '. + {graph: $grap
 systemctl restart docker
 lsblk
 
-apt-get install -y git vim tmux nmon
+apt-get update && apt-get install -y git vim tmux nmon
 
 runuser -l ubuntu -c "curl -fsSL -o ~/run.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/run.sh"
 runuser -l ubuntu -c "chmod 755 ~/run.sh"
