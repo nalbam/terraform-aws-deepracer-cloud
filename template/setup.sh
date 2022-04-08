@@ -7,6 +7,8 @@ exec >/var/log/user-data.log 2>&1
 cat <<EOF | tee -a /etc/motd
 #########################################################
 
+# deepracer-local
+
 tail -f -n 1000 /var/log/user-data.log
 
 dr-update && dr-upload-custom-files && dr-start-training -w
