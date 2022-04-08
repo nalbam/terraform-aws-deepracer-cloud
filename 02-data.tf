@@ -42,7 +42,3 @@ data "aws_ami" "default" {
     values = ["Deep Learning Base AMI (Ubuntu 18.04) *"]
   }
 }
-
-# data "template_file" "setup" {
-#   template = file("template/setup.sh")
-# }
