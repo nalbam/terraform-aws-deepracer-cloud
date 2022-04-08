@@ -44,7 +44,7 @@ lsblk
 
 apt-get update && apt-get install -y git vim tmux nmon
 
-runuser -l ubuntu -c "curl -fsSL -o ~/run.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/template/run.sh"
+runuser -l ubuntu -c "curl -fsSL -o ~/run.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/bin/run.sh"
 runuser -l ubuntu -c "chmod 755 ~/run.sh"
 
 runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
