@@ -5,8 +5,8 @@ resource "aws_launch_template" "worker" {
 
   image_id = local.ami_id
 
-  user_data = filebase64("bin/setup.sh")
-  # user_data = base64encode(templatefile("bin/setup.sh", { region = var.region }))
+  # user_data = filebase64("bin/setup.sh")
+  user_data = base64encode(templatefile("bin/setup.sh", { region = var.region }))
 
   instance_type = var.instance_type
   key_name      = var.key_name

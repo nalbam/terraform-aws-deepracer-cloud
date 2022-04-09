@@ -44,6 +44,9 @@ lsblk
 
 apt-get update && apt-get install -y git vim tmux nmon
 
+runuser -l ubuntu -c "aws configure set default.region ${region}"
+runuser -l ubuntu -c "aws configure set default.output json"
+
 runuser -l ubuntu -c "curl -fsSL -o ~/dr-daemon https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/bin/dr-daemon.sh"
 runuser -l ubuntu -c "curl -fsSL -o ~/dr-trainer https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/bin/dr-trainer.sh"
 runuser -l ubuntu -c "curl -fsSL -o ~/run.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/bin/run.sh"
