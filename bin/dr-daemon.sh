@@ -1,14 +1,24 @@
-#!/usr/bin/env bash
+#!/bin/sh -e
+#
+# start/stop dr-trainer daemons
+#
+### BEGIN INIT INFO
+# Provides:	         dr-trainer
+# Required-Start:	   $network $remote_fs
+# Required-Stop:	   $network $remote_fs
+# Default-Start:	   2 3 4 5
+# Default-Stop:	     0 1 6
+# Short-Description: DeepRacer Trainer
+### END INIT INFO
 
-NAME=dr-daemon
-DAEMON=/home/ubuntu/dr-training
-PIDDIR=/var/run
-USER=root
-GROUP=root
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+NAME=dr-trainer
+DAEMON=/home/ubuntu/dr-trainer
+PIDDIR=/var/run/$NAME
+DESC="DeepRacer Trainer"
+USERID=root
 
-if [ -r /lib/lsb/init-functions ]; then
-  source /lib/lsb/init-functions
-fi
+. /lib/lsb/init-functions
 
 check_root() {
   if [ "$(id -u)" != "0" ]; then
@@ -17,30 +27,33 @@ check_root() {
   fi
 }
 
+###################################################################################################
 case "$1" in
 start)
   check_root
   exitval=0
-  log_daemon_msg "Starting $NAME"
+  log_daemon_msg "Starting $DESC "
   if pidofproc -p $PIDDIR/$NAME.pid $DAEMON >/dev/null; then
     log_progress_msg "$NAME apparently already running"
     log_end_msg 0
     exit 0
   fi
   start-stop-daemon --start --quiet --oknodo --pidfile $PIDDIR/$NAME.pid \
-    --chuid $USER:$GROUP --exec $DAEMON --background --make-pidfile
+    --chuid $USERID:$USERID --exec $DAEMON --background --make-pidfile
   log_progress_msg $NAME
+  # start my service
   exitval=$?
   log_end_msg $exitval
   ;;
 stop)
   check_root
   exitval=0
-  log_daemon_msg "Stopping $NAME"
+  log_daemon_msg "Stopping $DESC "
   log_progress_msg $NAME
   # stop my service
   if pidofproc -p $PIDDIR/$NAME.pid $DAEMON >/dev/null; then
-    start-stop-daemon --stop --verbose --oknodo --pidfile $PIDDIR/$NAME.pid --exec $DAEMON
+    start-stop-daemon --stop --verbose --oknodo --pidfile $PIDDIR/$NAME.pid \
+      --exec $DAEMON
     exitval=$?
   else
     log_progress_msg "apparently not running"
@@ -48,25 +61,23 @@ stop)
   exitval=$?
   log_end_msg $exitval
   ;;
+restart | force-reload)
+  check_root
+  $0 stop
+  # Wait for things to settle down
+  sleep 1
+  $0 start
+  ;;
+reload)
+  log_warning_msg "Reloading $NAME daemon: not implemented, as the daemon"
+  log_warning_msg "cannot re-read the config file (use restart)."
+  ;;
 status)
-  PIDFILE=$PIDDIR/$NAME.pid
-  if [ -e $PIDFILE ]; then
-    PID="$(cat $PIDFILE)"
-    if test -n "$PID" && test -d "/proc/$PID" &>/dev/null; then
-      log_success_msg "$NAME Process is running"
-      exit 0
-    else
-      log_failure_msg "$NAME Process is not running"
-      exit 1
-    fi
-  else
-    log_failure_msg "$NAME Process is not running"
-    exit 3
-  fi
+  log_warning_msg "Status check $NAME daemon: not implemented, as the daemon"
   ;;
 *)
   N=/etc/init.d/$NAME
-  echo "Usage: $N {start|stop|restart}" >&2
+  echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
   exit 1
   ;;
 esac
