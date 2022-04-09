@@ -48,9 +48,9 @@ runuser -l ubuntu -c "curl -fsSL -o ~/dr-daemon https://raw.githubusercontent.co
 runuser -l ubuntu -c "curl -fsSL -o ~/dr-trainer https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/bin/dr-trainer.sh"
 runuser -l ubuntu -c "curl -fsSL -o ~/run.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/bin/run.sh"
 runuser -l ubuntu -c "chmod 755 dr-daemon dr-trainer run.sh"
-# runuser -l ubuntu -c "sudo cp dr-daemon /etc/init.d/dr-trainer"
-# runuser -l ubuntu -c "sudo service dr-trainer start"
-# runuser -l ubuntu -c "sudo update-rc.d dr-trainer defaults 99
+runuser -l ubuntu -c "sudo cp dr-daemon /etc/init.d/dr-trainer"
+runuser -l ubuntu -c "sudo service dr-trainer start"
+runuser -l ubuntu -c "sudo update-rc.d dr-trainer defaults 99"
 
 runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
 runuser -l ubuntu -c "cd ~/deepracer-for-cloud && ./bin/prepare.sh"

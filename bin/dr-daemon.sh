@@ -14,7 +14,7 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 NAME=dr-trainer
 DAEMON=/home/ubuntu/dr-trainer
-PIDDIR=/var/run/$NAME
+PIDDIR=/var/run
 DESC="DeepRacer Trainer"
 USERID=root
 
@@ -48,7 +48,7 @@ start)
 stop)
   check_root
   exitval=0
-  log_daemon_msg "Stopping $DESC "
+  log_daemon_msg "Stopping $NAME"
   log_progress_msg $NAME
   # stop my service
   if pidofproc -p $PIDDIR/$NAME.pid $DAEMON >/dev/null; then
