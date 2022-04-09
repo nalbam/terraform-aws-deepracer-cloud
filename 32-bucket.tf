@@ -7,3 +7,11 @@ resource "aws_s3_bucket" "local" {
 resource "aws_s3_bucket" "upload" {
   bucket = format("aws-deepracer-%s-upload", local.account_id)
 }
+
+output "bucket_local" {
+  value = aws_s3_bucket.local.id
+}
+
+output "bucket_upload" {
+  value = aws_s3_bucket.upload.id
+}
