@@ -11,13 +11,13 @@ data "aws_instances" "worker" {
 }
 
 data "aws_route53_zone" "worker" {
-  count = var.hostname == "" ? 0 : 1
+  count = var.zone_name == "" ? 0 : 1
 
-  name = var.hostname
+  name = var.zone_name
 }
 
 resource "aws_route53_record" "worker" {
-  count = var.hostname == "" ? 0 : var.desired > 0 ? 1 : 0
+  count = var.zone_name == "" ? 0 : var.desired > 0 ? 1 : 0
 
   name    = var.name
   ttl     = 300

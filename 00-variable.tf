@@ -90,7 +90,7 @@ variable "key_name" {
   default = "nalbam-seoul"
 }
 
-variable "hostname" {
+variable "zone_name" {
   type    = string
   default = "nalbam.com"
 }
