@@ -16,7 +16,7 @@ NAME=dr-trainer
 DAEMON=/home/ubuntu/dr-trainer
 PIDDIR=/var/run
 DESC="DeepRacer Trainer"
-USERID=root
+USERID=ubuntu
 
 . /lib/lsb/init-functions
 

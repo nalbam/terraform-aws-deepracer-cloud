@@ -45,7 +45,16 @@ _restore() {
 }
 
 _init() {
+  curl -fsSL -o ~/dr-daemon https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/bin/dr-daemon.sh
+  curl -fsSL -o ~/dr-trainer https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/bin/dr-trainer.sh
+  chmod 755 dr-daemon dr-trainer
+  sudo cp dr-daemon /etc/init.d/dr-trainer
+  sudo service dr-trainer start
+  sudo update-rc.d dr-trainer defaults 99
+
   pushd ~/deepracer-for-cloud
+
+  DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
 
   RL_COACH=$(cat defaults/dependencies.json | jq .containers.rl_coach -r)
   SAGEMAKER=$(cat defaults/dependencies.json | jq .containers.sagemaker -r)
