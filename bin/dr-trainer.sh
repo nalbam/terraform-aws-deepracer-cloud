@@ -15,7 +15,7 @@ process_USR1() {
 print_debug() {
   whatiam="$1"
   tty="$2"
-  [[ "$tty" != "not a tty" ]] && {
+  [[ "$tty" -ne "not a tty" ]] && {
     echo "" >$tty
     echo "$whatiam, PID $$" >$tty
     ps -o pid,sess,pgid -p $$ >$tty
@@ -28,23 +28,23 @@ me_FILE=$(basename $0)
 cd /
 
 #### CHILD HERE --------------------------------------------------------------------->
-if [ "$1" = "child" ]; then # 2. We are the child. We need to fork again.
+if [ "$1" -eq "child" ]; then # 2. We are the child. We need to fork again.
   shift
   tty="$1"
   shift
   $DEBUG && print_debug "*** CHILD, NEW SESSION, NEW PGID" "$tty"
   umask 0
   $me_DIR/$me_FILE XXrefork_daemonXX "$tty" "$@" </dev/null >/dev/null 2>/dev/null &
-  $DEBUG && [[ "$tty" != "not a tty" ]] && echo "CHILD OUT" >$tty
+  $DEBUG && [[ "$tty" -ne "not a tty" ]] && echo "CHILD OUT" >$tty
   exit 0
 fi
 
 ##### ENTRY POINT HERE -------------------------------------------------------------->
-if [ "$1" != "XXrefork_daemonXX" ]; then # 1. This is where the original call starts.
+if [ "$1" -ne "XXrefork_daemonXX" ]; then # 1. This is where the original call starts.
   tty=$(tty)
   $DEBUG && print_debug "*** PARENT" "$tty"
   setsid $me_DIR/$me_FILE child "$tty" "$@" &
-  $DEBUG && [[ "$tty" != "not a tty" ]] && echo "PARENT OUT" >$tty
+  $DEBUG && [[ "$tty" -ne "not a tty" ]] && echo "PARENT OUT" >$tty
   exit 0
 fi
 
@@ -60,30 +60,23 @@ shift
 
 $DEBUG && print_debug "*** DAEMON" "$tty"
 # The real stuff goes here. To exit, see fun (above)
-$DEBUG && [[ "$tty" != "not a tty" ]] && echo NOT A REAL DAEMON. NOT RUNNING WHILE LOOP. >$tty
+$DEBUG && [[ "$tty" -ne "not a tty" ]] && echo NOT A REAL DAEMON. NOT RUNNING WHILE LOOP. >$tty
 
 $DEBUG || {
   while true; do
-    echo "Change this loop, so this silly no-op goes away." >/dev/null
-    echo "Do something useful with your life, young padawan." >/dev/null
-
     DR_IMAGE_CNT=$(docker images | grep deepracer | wc -l)
-
     DR_PS_CNT=$(docker ps | grep deepracer | wc -l)
 
     if [ ${DR_PS_CNT} -eq 0 ] && [ ${DR_IMAGE_CNT} -ge 3 ]; then
-      echo "[$(whoami)] dr-start-training" >/dev/null
+      echo "[$(whoami)] dr-start-training"
     else
-      echo "[$(whoami)] dr-training-started ${DR_PS_CNT}" >/dev/null
+      echo "[$(whoami)] dr-training-started ${DR_PS_CNT}"
     fi
 
     sleep 60
   done
 }
 
-$DEBUG && [[ "$tty" != "not a tty" ]] && sleep 3 && echo "DAEMON OUT" >$tty
+$DEBUG && [[ "$tty" -ne "not a tty" ]] && sleep 3 && echo "DAEMON OUT" >$tty
 
 exit 0
-# This may never run. Why is it here then? It's pretty.
-# Kind of like, "The End" at the end of a movie that you
-# already know is over. It's always nice.
