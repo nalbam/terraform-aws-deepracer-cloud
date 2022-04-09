@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-NAME=dr-local
-DAEMON=/home/ubuntu/dr-local
+NAME=dr-daemon
+DAEMON=/home/ubuntu/dr-training
 PIDDIR=/var/run
 USER=root
 GROUP=root
@@ -36,7 +36,7 @@ start)
 stop)
   check_root
   exitval=0
-  log_daemon_msg "Stopping $DESC "
+  log_daemon_msg "Stopping $NAME"
   log_progress_msg $NAME
   # stop my service
   if pidofproc -p $PIDDIR/$NAME.pid $DAEMON >/dev/null; then
