@@ -32,5 +32,5 @@ resource "aws_route53_record" "worker" {
 }
 
 output "public_ip" {
-  value = data.aws_instances.worker.0.public_ips
+  value = try(data.aws_instances.worker.0.public_ips, [])
 }
