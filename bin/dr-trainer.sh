@@ -69,8 +69,16 @@ $DEBUG || {
 
     if [ ${DR_PS_CNT} -eq 0 ] && [ ${DR_IMAGE_CNT} -ge 3 ]; then
       echo "[$(whoami)] dr-start-training"
+
+      ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
+
+      DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
+
+      ENV_CNT=$(aws s3 ls s3://${DR_LOCAL_S3_BUCKET}/ | grep '.env' | wc -l)
+      CST_CNT=$(aws s3 ls s3://${DR_LOCAL_S3_BUCKET}/custom_files/ | wc -l)
+
     else
-      echo "[$(whoami)] dr-training-started ${DR_PS_CNT}"
+      echo "[$(whoami)] dr-training-started ${DR_IMAGE_CNT} ${DR_PS_CNT}"
     fi
 
     sleep 60
