@@ -10,15 +10,15 @@ data "aws_instances" "worker" {
   depends_on = [aws_autoscaling_group.worker]
 }
 
-resource "aws_eip" "worker" {
-  instance = try(data.aws_instances.worker.0.ids.0, null)
+# resource "aws_eip" "worker" {
+#   instance = try(data.aws_instances.worker.0.ids.0, null)
 
-  vpc = true
+#   vpc = true
 
-  tags = local.tags
-}
+#   tags = local.tags
+# }
 
 output "public_ip" {
-  # value = try(data.aws_instances.worker.0.public_ips, [])
-  value = aws_eip.worker.public_ip
+  value = try(data.aws_instances.worker.0.public_ips.0, "")
+  # value = aws_eip.worker.public_ip
 }

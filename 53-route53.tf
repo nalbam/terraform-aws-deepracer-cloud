@@ -17,7 +17,8 @@ resource "aws_route53_record" "worker" {
   allow_overwrite = true
 
   records = [
-    aws_eip.worker.public_ip
+    data.aws_instances.worker.0.public_ips.0,
+    # aws_eip.worker.public_ip,
   ]
 }
 
