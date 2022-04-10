@@ -2,12 +2,6 @@
 
 CMD=${1}
 
-CNT=$(ps -ef | grep containerd-shim-runc | wc -l)
-
-# if [ ! -f "./run.env" ] || [ ! -f "./system.env" ] || [ "$CNT" -gt "8" ]; then
-#   exit 1
-# fi
-
 ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
 
 _usage() {
@@ -21,10 +15,12 @@ EOF
 _backup() {
   pushd ~/deepracer-for-cloud
 
-  DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
+  aws s3 cp ./run.env s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/
+  aws s3 cp ./system.env s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/
 
-  aws s3 cp ./run.env s3://${DR_LOCAL_S3_BUCKET}/
-  aws s3 cp ./system.env s3://${DR_LOCAL_S3_BUCKET}/
+  aws s3 cp ./custom_files/hyperparameters.json s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/
+  aws s3 cp ./custom_files/model_metadata.json s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/
+  aws s3 cp ./custom_files/reward_function.py s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/
 
   popd
 }
@@ -32,45 +28,71 @@ _backup() {
 _restore() {
   pushd ~/deepracer-for-cloud
 
-  DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
+  CNT=$(aws s3 ls s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME} | wc -l | xargs)
+  if [ "x${CNT}" != "x0" ]; then
+    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/run.env ./
+    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/system.env ./
+  fi
 
-  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/run.env ./
-  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/system.env ./
-
-  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/custom_files/hyperparameters.json ./custom_files/
-  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/custom_files/model_metadata.json ./custom_files/
-  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/custom_files/reward_function.py ./custom_files/
+  CNT=$(aws s3 ls s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files | wc -l | xargs)
+  if [ "x${CNT}" != "x0" ]; then
+    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/hyperparameters.json ./custom_files/
+    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/model_metadata.json ./custom_files/
+    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/reward_function.py ./custom_files/
+  fi
 
   popd
 }
 
 _init() {
-  curl -fsSL -o ~/dr-daemon https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-cloud/main/bin/dr-daemon.sh
-  curl -fsSL -o ~/dr-trainer https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-cloud/main/bin/dr-trainer.sh
-  chmod 755 dr-daemon dr-trainer
-  sudo cp dr-daemon /etc/init.d/dr-trainer
-  sudo service dr-trainer start
-  sudo update-rc.d dr-trainer defaults 99
+  DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
+
+  DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
+
+  # autorun.s3url
+  aws s3 cp ~/run.sh s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh
 
   pushd ~/deepracer-for-cloud
 
+  echo "s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh" >./autorun.s3url
+
+  popd
+}
+
+_main() {
   DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
+
+  DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
+  DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
+
+  _restore
+
+  pushd ~/deepracer-for-cloud
 
   RL_COACH=$(cat defaults/dependencies.json | jq .containers.rl_coach -r)
   SAGEMAKER=$(cat defaults/dependencies.json | jq .containers.sagemaker -r)
   ROBOMAKER=$(cat defaults/dependencies.json | jq .containers.robomaker -r)
 
-  # 훈련 환경 설정 : run.env
-  DR_WORLD_NAME="2022_april_pro"
-  DR_LOCAL_S3_MODEL_PREFIX="DR-2204-PRO-A-1"
-  DR_LOCAL_S3_PRETRAINED="False"
+  # run.env
+  DR_CURRENT_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' run.env | cut -d'=' -f2)
+
+  if [ "${DR_CURRENT_MODEL_BASE}" != "${DR_MODEL_BASE}" ]; then
+    sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
+    sed -i "s/.*DR_LOCAL_S3_PRETRAINED.*/DR_LOCAL_S3_PRETRAINED=False/" run.env
+
+    if [ "${DR_CURRENT_MODEL_BASE}" == "" ]; then
+      echo "DR_MODEL_BASE=${DR_MODEL_BASE}" >> run.env
+    else
+      sed -i "s/\(^DR_MODEL_BASE=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
+    fi
+  else
+    _increment
+  fi
 
   sed -i "s/\(^DR_WORLD_NAME=\)\(.*\)/\1$DR_WORLD_NAME/" run.env
-  sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$DR_LOCAL_S3_MODEL_PREFIX/" run.env
-  sed -i "s/\(^DR_LOCAL_S3_PRETRAINED=\)\(.*\)/\1$DR_LOCAL_S3_PRETRAINED/" run.env
 
-  # 시스템 환경 설정 변경 : system.env
-  DR_AWS_APP_REGION="us-west-2"
+  # system.env
+  DR_AWS_APP_REGION="$(aws configure get default.region)"
   DR_LOCAL_S3_PROFILE="default"
   DR_UPLOAD_S3_PROFILE="default"
   DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
@@ -108,6 +130,24 @@ DR_UPLOAD_S3_PREFIX=drfc-1
 EOF
 
   popd
+
+  _backup
+
+  _start
+
+  _viewer
+}
+
+_start() {
+  dr-update && dr-upload-custom-files && dr-start-training
+}
+
+_increment() {
+  dr-increment-training -f
+}
+
+_viewer() {
+  dr-stop-viewer && dr-start-viewer
 }
 
 case ${CMD} in
@@ -120,7 +160,13 @@ b | backup)
 r | restore)
   _restore
   ;;
+s | start)
+  _start
+  ;;
+v | viewer)
+  _viewer
+  ;;
 *)
-  _usage
+  _main
   ;;
 esac

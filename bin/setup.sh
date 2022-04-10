@@ -48,7 +48,7 @@ runuser -l ubuntu -c "aws configure set default.region ${region}"
 runuser -l ubuntu -c "aws configure set default.output json"
 
 runuser -l ubuntu -c "curl -fsSL -o ~/run.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-cloud/main/bin/run.sh"
-runuser -l ubuntu -c "chmod 755 ~/run.sh"
+runuser -l ubuntu -c "bash ~/run.sh init"
 
 runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
 runuser -l ubuntu -c "cd ~/deepracer-for-cloud && ./bin/prepare.sh"

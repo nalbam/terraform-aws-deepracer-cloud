@@ -1,24 +1,42 @@
 # terraform-aws-deepracer-cloud
 
-* <https://mungi.notion.site/DRfC-in-AWS-g4dn-2xlarge-c908e42f16324a6492f67d4d40b61f31>
-* <https://github.com/aws-deepracer-community>
+* <https://github.com/aws-deepracer-community/deepracer-for-cloud>
 
-> 위 문서를 참고하여 만들었습니다.
-> 이 테라폼을 실행 하면, 위 문서의 `init.sh 실행` 까지 실행 됩니다.
+## config
+
+> Save the environment variable json in AWS SSM.
+
+```bash
+aws configure set default.region us-west-2
+aws configure set default.output json
+
+DR_WORLD_NAME="2022_april_pro"
+DR_MODEL_BASE="DR-2204-PRO-A-1"
+
+# put aws ssm parameter store
+aws ssm put-parameter --name /dr-cloud/world_name --value "${DR_WORLD_NAME}" --type SecureString --overwrite | jq .
+aws ssm put-parameter --name /dr-cloud/model_base --value "${DR_MODEL_BASE}" --type SecureString --overwrite | jq .
+
+# get aws ssm parameter store
+aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r
+aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r
+```
 
 ## replace
 
-> 이 쉘을 실행하면, 테라폼 백엔드의 버켓을 aws account id 를 포함하는 문자로 변경하고, 버켓이 없다면 버켓을 생성 합니다.
+> Create bucket and dynamodb for Terraform backend.
 
 ```bash
 ./replace.sh
 
 # ACCOUNT_ID = 123456789012
-# REGION = us-west-2
+# REGION = ap-northeast-2
 # BUCKET = terraform-workshop-123456789012
 ```
 
 ## terraform apply
+
+> Create a Spot Instance with AutoscalingGroup.
 
 ```bash
 terraform apply
