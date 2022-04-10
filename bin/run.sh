@@ -45,8 +45,8 @@ _restore() {
 }
 
 _init() {
-  curl -fsSL -o ~/dr-daemon https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/bin/dr-daemon.sh
-  curl -fsSL -o ~/dr-trainer https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-local/main/bin/dr-trainer.sh
+  curl -fsSL -o ~/dr-daemon https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-cloud/main/bin/dr-daemon.sh
+  curl -fsSL -o ~/dr-trainer https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-cloud/main/bin/dr-trainer.sh
   chmod 755 dr-daemon dr-trainer
   sudo cp dr-daemon /etc/init.d/dr-trainer
   sudo service dr-trainer start

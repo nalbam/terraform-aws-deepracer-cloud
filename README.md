@@ -1,4 +1,4 @@
-# terraform-aws-deepracer-local
+# terraform-aws-deepracer-cloud
 
 * <https://mungi.notion.site/DRfC-in-AWS-g4dn-2xlarge-c908e42f16324a6492f67d4d40b61f31>
 
