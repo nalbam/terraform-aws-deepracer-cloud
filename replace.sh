@@ -5,7 +5,7 @@ OS_NAME="$(uname | awk '{print tolower($0)}')"
 # variable
 export ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
 
-export REGION="us-west-2"
+export REGION="ap-northeast-2"
 export BUCKET="terraform-workshop-${1:-${ACCOUNT_ID}}"
 
 export LOCK_TABLE="terraform-resource-lock"
