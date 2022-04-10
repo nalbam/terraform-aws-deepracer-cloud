@@ -56,7 +56,11 @@ _init() {
 
   git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
 
-  echo "s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh" >~/deepracer-for-cloud/autorun.s3url
+  popd
+
+  pushd ~/deepracer-for-cloud
+
+  echo "s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh" >./autorun.s3url
 
   ./bin/prepare.sh
 
