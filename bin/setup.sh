@@ -47,13 +47,8 @@ apt-get update && apt-get install -y git vim tmux nmon
 runuser -l ubuntu -c "aws configure set default.region ${region}"
 runuser -l ubuntu -c "aws configure set default.output json"
 
-runuser -l ubuntu -c "curl -fsSL -o ~/dr-daemon https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-cloud/main/bin/dr-daemon.sh"
-runuser -l ubuntu -c "curl -fsSL -o ~/dr-trainer https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-cloud/main/bin/dr-trainer.sh"
 runuser -l ubuntu -c "curl -fsSL -o ~/run.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-cloud/main/bin/run.sh"
-runuser -l ubuntu -c "chmod 755 ~/dr-daemon ~/dr-trainer ~/run.sh"
-runuser -l ubuntu -c "sudo cp ~/dr-daemon /etc/init.d/dr-trainer"
-runuser -l ubuntu -c "sudo service dr-trainer start"
-runuser -l ubuntu -c "sudo update-rc.d dr-trainer defaults 99"
+runuser -l ubuntu -c "chmod 755 ~/run.sh"
 
 runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
 runuser -l ubuntu -c "cd ~/deepracer-for-cloud && ./bin/prepare.sh"

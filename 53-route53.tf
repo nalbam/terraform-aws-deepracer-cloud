@@ -34,3 +34,7 @@ resource "aws_route53_record" "worker" {
 output "public_ip" {
   value = try(data.aws_instances.worker.0.public_ips, [])
 }
+
+output "domain" {
+  value = try(aws_route53_record.worker.0.fqdn, "")
+}

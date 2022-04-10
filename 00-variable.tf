@@ -7,7 +7,7 @@ variable "region" {
 
 variable "name" {
   type    = string
-  default = "dr-local"
+  default = "dr-cloud"
 }
 
 variable "instance_type" {
