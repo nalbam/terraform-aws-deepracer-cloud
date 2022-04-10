@@ -52,9 +52,13 @@ _init() {
   # autorun.s3url
   aws s3 cp ~/run.sh s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh
 
-  pushd ~/deepracer-for-cloud
+  pushd ~
 
-  echo "s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh" >./autorun.s3url
+  git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
+
+  echo "s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh" >~/deepracer-for-cloud/autorun.s3url
+
+  ./bin/prepare.sh
 
   popd
 }
@@ -81,7 +85,7 @@ _main() {
     sed -i "s/.*DR_LOCAL_S3_PRETRAINED.*/DR_LOCAL_S3_PRETRAINED=False/" run.env
 
     if [ "${DR_CURRENT_MODEL_BASE}" == "" ]; then
-      echo "DR_MODEL_BASE=${DR_MODEL_BASE}" >> run.env
+      echo "DR_MODEL_BASE=${DR_MODEL_BASE}" >>run.env
     else
       sed -i "s/\(^DR_MODEL_BASE=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
     fi
