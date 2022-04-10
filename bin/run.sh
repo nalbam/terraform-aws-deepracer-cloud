@@ -51,11 +51,9 @@ _init() {
 
   # autorun.s3url
   aws s3 cp ~/run.sh s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh
+  echo "s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh" >~/deepracer-for-cloud/autorun.s3url
 
-  # pushd ~
   # git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
-  # popd
-
   # pushd ~/deepracer-for-cloud
   # echo "s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh" >./autorun.s3url
   # ./bin/prepare.sh
