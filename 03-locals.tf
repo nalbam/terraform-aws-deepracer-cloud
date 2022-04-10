@@ -11,7 +11,8 @@ locals {
   subnet_ids = data.aws_subnets.default.ids
 
   tags = {
-    "Name" = var.name
+    "Name"    = var.name
+    "Purpose" = "deepracer"
   }
 
   asg_tags = [

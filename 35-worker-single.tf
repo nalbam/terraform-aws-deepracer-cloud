@@ -10,8 +10,6 @@ resource "aws_autoscaling_group" "worker" {
 
   vpc_zone_identifier = local.subnet_ids
 
-  # load_balancers = [aws_lb_target_group.public_http.arn]
-
   suspended_processes = var.suspended_processes
 
   launch_template {
@@ -21,7 +19,6 @@ resource "aws_autoscaling_group" "worker" {
 
   lifecycle {
     create_before_destroy = true
-    # ignore_changes        = [desired_capacity]
   }
 
   tags = local.asg_tags
