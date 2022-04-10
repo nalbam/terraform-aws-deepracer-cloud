@@ -11,7 +11,7 @@ data "aws_instances" "worker" {
 }
 
 resource "aws_eip" "worker" {
-  instance =   try(data.aws_instances.worker.0.ids.0, null)
+  instance = try(data.aws_instances.worker.0.ids.0, null)
 
   vpc = true
 
