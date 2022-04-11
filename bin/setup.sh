@@ -11,10 +11,11 @@ cat <<EOF | tee -a /etc/motd
 
 tail -f -n 1000 /var/log/user-data.log
 
-dr-update && dr-upload-custom-files && dr-start-training -w
+dr-update && dr-upload-custom-files && dr-start-training
 
 dr-stop-training
 dr-increment-training -f
+dr-upload-model
 
 dr-stop-viewer && dr-start-viewer
 
