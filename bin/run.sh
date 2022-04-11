@@ -143,6 +143,7 @@ EOF
   sleep 30
 
   _viewer
+  _loganalysis
 }
 
 _start() {
@@ -164,7 +165,15 @@ _increment() {
 _viewer() {
   pushd ~/deepracer-for-cloud
 
-  dr-stop-viewer && dr-start-viewer
+  dr-start-viewer
+
+  popd
+}
+
+_loganalysis() {
+  pushd ~/deepracer-for-cloud
+
+  dr-start-loganalysis
 
   popd
 }
