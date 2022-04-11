@@ -10,6 +10,8 @@ data "aws_instances" "worker" {
   depends_on = [aws_autoscaling_group.worker]
 }
 
+# output
+
 output "public_ip" {
   value = try(data.aws_instances.worker.0.public_ips.0, "")
   # value = aws_eip.worker.public_ip
