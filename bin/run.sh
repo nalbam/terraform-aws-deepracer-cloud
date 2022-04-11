@@ -66,8 +66,6 @@ _main() {
 
   pushd ~/deepracer-for-cloud
 
-  source ./bin/activate.sh
-
   RL_COACH=$(cat defaults/dependencies.json | jq .containers.rl_coach -r)
   SAGEMAKER=$(cat defaults/dependencies.json | jq .containers.sagemaker -r)
   ROBOMAKER=$(cat defaults/dependencies.json | jq .containers.robomaker -r)
@@ -142,10 +140,16 @@ _main() {
   _loganalysis
 }
 
-_start() {
+_activate() {
   pushd ~/deepracer-for-cloud
 
   source ./bin/activate.sh
+
+  popd
+}
+
+_start() {
+  pushd ~/deepracer-for-cloud
 
   dr-update && dr-upload-custom-files && dr-start-training
 
@@ -155,8 +159,6 @@ _start() {
 _increment() {
   pushd ~/deepracer-for-cloud
 
-  source ./bin/activate.sh
-
   dr-increment-training -f
 
   popd
@@ -164,8 +166,6 @@ _increment() {
 
 _viewer() {
   pushd ~/deepracer-for-cloud
-
-  source ./bin/activate.sh
 
   dr-stop-viewer && dr-start-viewer
 
@@ -175,8 +175,6 @@ _viewer() {
 _analysis() {
   pushd ~/deepracer-for-cloud
 
-  source ./bin/activate.sh
-
   dr-stop-loganalysis && dr-start-loganalysis
 
   popd
@@ -184,8 +182,6 @@ _analysis() {
 
 _upload() {
   pushd ~/deepracer-for-cloud
-
-  source ./bin/activate.sh
 
   dr-upload-model
 
@@ -203,18 +199,27 @@ r | restore)
   _restore
   ;;
 s | start)
+  _activate
   _start
   ;;
 v | viewer)
+  _activate
   _viewer
   ;;
 a | analysis)
+  _activate
   _analysis
   ;;
 u | upload)
+  _activate
   _upload
   ;;
 *)
+  _activate
   _main
+  _start
+  sleep 60
+  _viewer
+  _analysis
   ;;
 esac
