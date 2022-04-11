@@ -149,6 +149,8 @@ EOF
 _start() {
   pushd ~/deepracer-for-cloud
 
+  source ./bin/activate.sh
+
   dr-update && dr-upload-custom-files && dr-start-training
 
   popd
@@ -156,6 +158,8 @@ _start() {
 
 _increment() {
   pushd ~/deepracer-for-cloud
+
+  source ./bin/activate.sh
 
   dr-increment-training -f
 
@@ -165,6 +169,8 @@ _increment() {
 _viewer() {
   pushd ~/deepracer-for-cloud
 
+  source ./bin/activate.sh
+
   dr-stop-viewer && dr-start-viewer
 
   popd
@@ -173,6 +179,8 @@ _viewer() {
 _analysis() {
   pushd ~/deepracer-for-cloud
 
+  source ./bin/activate.sh
+
   dr-stop-loganalysis && dr-start-loganalysis
 
   popd
@@ -180,6 +188,8 @@ _analysis() {
 
 _upload() {
   pushd ~/deepracer-for-cloud
+
+  source ./bin/activate.sh
 
   dr-upload-model
 
