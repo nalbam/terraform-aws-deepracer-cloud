@@ -131,13 +131,6 @@ _main() {
   popd
 
   _backup
-
-  _start
-
-  sleep 60
-
-  _viewer
-  _loganalysis
 }
 
 _activate() {
