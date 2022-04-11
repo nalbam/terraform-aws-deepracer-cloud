@@ -132,11 +132,11 @@ DR_LOCAL_S3_PREFIX=drfc-1
 DR_UPLOAD_S3_PREFIX=drfc-1
 EOF
 
+  date | tee ./DONE-AUTORUN
+
   popd
 
   _backup
-
-  date | tee ./DONE-AUTORUN
 
   _start
 
