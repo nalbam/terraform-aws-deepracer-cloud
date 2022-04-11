@@ -138,6 +138,8 @@ EOF
 
   _start
 
+  sleep 30
+
   _viewer
 }
 

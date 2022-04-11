@@ -77,6 +77,21 @@ variable "suspended_processes" {
   ]
 }
 
+variable "ports" {
+  type = list(string)
+  default = [
+    "8100",
+    "8080",
+    "8081",
+    "8082",
+    "8083",
+    "8084",
+    "8085",
+    "8086",
+    "8888",
+  ]
+}
+
 variable "allow_ip_address" {
   type = list(string)
   default = [
