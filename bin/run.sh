@@ -165,7 +165,7 @@ _increment() {
 _viewer() {
   pushd ~/deepracer-for-cloud
 
-  dr-start-viewer
+  dr-stop-viewer && dr-start-viewer
 
   popd
 }
@@ -173,7 +173,7 @@ _viewer() {
 _loganalysis() {
   pushd ~/deepracer-for-cloud
 
-  dr-start-loganalysis
+  dr-stop-loganalysis && dr-start-loganalysis
 
   popd
 }
