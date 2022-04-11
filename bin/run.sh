@@ -211,8 +211,8 @@ u | upload)
   _activate
   _main
   _start
-  # sleep 60
-  # _viewer
-  # _analysis
+  sleep 60
+  _viewer
+  _analysis
   ;;
 esac
