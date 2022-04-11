@@ -170,10 +170,18 @@ _viewer() {
   popd
 }
 
-_loganalysis() {
+_analysis() {
   pushd ~/deepracer-for-cloud
 
   dr-stop-loganalysis && dr-start-loganalysis
+
+  popd
+}
+
+_upload() {
+  pushd ~/deepracer-for-cloud
+
+  dr-upload-model
 
   popd
 }
@@ -193,6 +201,12 @@ s | start)
   ;;
 v | viewer)
   _viewer
+  ;;
+a | analysis)
+  _analysis
+  ;;
+u | upload)
+  _upload
   ;;
 *)
   _main
