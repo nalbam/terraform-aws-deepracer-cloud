@@ -140,10 +140,10 @@ EOF
 
   _start
 
-  sleep 30
+  # sleep 30
 
-  _viewer
-  _loganalysis
+  # _viewer
+  # _loganalysis
 }
 
 _start() {
