@@ -18,9 +18,7 @@ _backup() {
   aws s3 cp ./run.env s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/
   aws s3 cp ./system.env s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/
 
-  aws s3 cp ./custom_files/hyperparameters.json s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/
-  aws s3 cp ./custom_files/model_metadata.json s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/
-  aws s3 cp ./custom_files/reward_function.py s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/
+  aws s3 sync ./custom_files/ s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/
 
   popd
 }
@@ -36,9 +34,7 @@ _restore() {
 
   CNT=$(aws s3 ls s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files | wc -l | xargs)
   if [ "x${CNT}" != "x0" ]; then
-    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/hyperparameters.json ./custom_files/
-    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/model_metadata.json ./custom_files/
-    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/reward_function.py ./custom_files/
+    aws s3 sync s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/ ./custom_files/
   fi
 
   popd
@@ -125,12 +121,12 @@ _main() {
 
   sed -i "s/.*CUDA_VISIBLE_DEVICES.*/CUDA_VISIBLE_DEVICES=0/" system.env
 
-  echo -e "\n" >>system.env
-
-  cat <<EOF >>system.env
-DR_LOCAL_S3_PREFIX=drfc-1
-DR_UPLOAD_S3_PREFIX=drfc-1
-EOF
+  CNT=$(cat system.env | grep 'DR_LOCAL_S3_PREFIX=' | wc -l | xargs)
+  if [ "x${CNT}" == "x0" ]; then
+    echo "" >>system.env
+    echo "DR_LOCAL_S3_PREFIX=drfc-1" >>system.env
+    echo "DR_UPLOAD_S3_PREFIX=drfc-1" >>system.env
+  fi
 
   date | tee ./DONE-AUTORUN
 
