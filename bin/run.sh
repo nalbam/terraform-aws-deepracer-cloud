@@ -51,7 +51,7 @@ _init() {
 
   # autorun.s3url
   aws s3 cp ~/run.sh s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh
-  echo "s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh" >~/deepracer-for-cloud/autorun.s3url
+  echo "${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}" >~/deepracer-for-cloud/autorun.s3url
 
   # git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
   # pushd ~/deepracer-for-cloud
@@ -69,6 +69,8 @@ _main() {
   _restore
 
   pushd ~/deepracer-for-cloud
+
+  source ./bin/activate.sh
 
   RL_COACH=$(cat defaults/dependencies.json | jq .containers.rl_coach -r)
   SAGEMAKER=$(cat defaults/dependencies.json | jq .containers.sagemaker -r)
@@ -140,15 +142,29 @@ EOF
 }
 
 _start() {
+  pushd ~/deepracer-for-cloud
+
+  date | tee ./DONE-AUTORUN
+
   dr-update && dr-upload-custom-files && dr-start-training
+
+  popd
 }
 
 _increment() {
+  pushd ~/deepracer-for-cloud
+
   dr-increment-training -f
+
+  popd
 }
 
 _viewer() {
+  pushd ~/deepracer-for-cloud
+
   dr-stop-viewer && dr-start-viewer
+
+  popd
 }
 
 case ${CMD} in
