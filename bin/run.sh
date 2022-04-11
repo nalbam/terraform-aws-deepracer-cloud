@@ -136,10 +136,10 @@ _main() {
 
   _start
 
-  # sleep 30
+  sleep 60
 
-  # _viewer
-  # _loganalysis
+  _viewer
+  _loganalysis
 }
 
 _start() {
