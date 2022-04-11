@@ -144,7 +144,7 @@ _activate() {
 _start() {
   pushd ~/deepracer-for-cloud
 
-  dr-update && dr-upload-custom-files && dr-start-training
+  dr-update && dr-upload-custom-files && dr-start-training -w
 
   popd
 }
@@ -211,8 +211,8 @@ u | upload)
   _activate
   _main
   _start
-  sleep 60
-  _viewer
-  _analysis
+  # sleep 60
+  # _viewer
+  # _analysis
   ;;
 esac
