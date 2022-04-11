@@ -136,6 +136,8 @@ EOF
 
   _backup
 
+  date | tee ./DONE-AUTORUN
+
   _start
 
   sleep 30
@@ -145,8 +147,6 @@ EOF
 
 _start() {
   pushd ~/deepracer-for-cloud
-
-  date | tee ./DONE-AUTORUN
 
   dr-update && dr-upload-custom-files && dr-start-training
 
