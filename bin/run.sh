@@ -135,16 +135,16 @@ _autorun() {
   cp -rf ./system.env ./custom_files/
   aws s3 sync ./custom_files/ s3://${DR_S3_BUCKET}/${DR_WORLD_NAME}/
 
-  # _status
+  # status
   crontab -l >/tmp/crontab.sh
   CNT=$(cat /tmp/crontab.sh | grep 'run.sh status' | wc -l | xargs)
   if [ "x${CNT}" == "x0" ]; then
-    _status
     # echo "@reboot /home/ubuntu/.runonce.sh___init_sh__c_aws__a_gpu" > /tmp/crontab.sh
     echo "" >>/tmp/crontab.sh
     echo "0 * * * * bash /home/ubuntu/run.sh status" >>/tmp/crontab.sh
     crontab /tmp/crontab.sh
   fi
+  _status
 
   # done
   date | tee ./DONE-AUTORUN
