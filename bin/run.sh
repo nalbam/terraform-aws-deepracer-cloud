@@ -49,7 +49,7 @@ _monitor() {
     curl -sL opspresso.github.io/tools/slack.sh | bash -s -- \
       --token="${SLACK_TOKEN}" --username="dr-cloud" \
       --color="good" --title="${PUBLIC_IP}" \
-      "${UPTIME}\n SAGEMAKER=\`${SAGEMAKER}\` ROBOMAKER=\`${ROBOMAKER}\`"
+      "${UPTIME}\n sagemaker=\`${SAGEMAKER}\` robomaker=\`${ROBOMAKER}\`"
   fi
 }
 
