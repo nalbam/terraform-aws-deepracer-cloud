@@ -123,9 +123,8 @@ _main() {
 
   date | tee ./DONE-AUTORUN
 
-  dr-update-env
-
-  ./scripts/training/start.sh -w -v
+  dr-reload
+  dr-start-training -w -v
 }
 
 case ${CMD} in
