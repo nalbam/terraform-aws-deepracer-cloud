@@ -10,7 +10,7 @@ DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
 
 DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
 
-echo "AWS_RESION: ${AWS_RESION}" >~/.autorun.log
+echo "AWS_RESION: ${AWS_RESION}" >>~/.autorun.log
 echo "ACCOUNT_ID: ${ACCOUNT_ID}" >>~/.autorun.log
 echo "DR_LOCAL_S3_BUCKET: ${DR_LOCAL_S3_BUCKET}" >>~/.autorun.log
 
