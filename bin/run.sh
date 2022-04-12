@@ -68,7 +68,8 @@ _main() {
 
   if [ "${DR_CURRENT_MODEL_BASE}" != "${DR_MODEL_BASE}" ]; then
     sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
-    sed -i "s/.*DR_LOCAL_S3_PRETRAINED.*/DR_LOCAL_S3_PRETRAINED=False/" run.env
+    sed -i "s/\(^DR_LOCAL_S3_PRETRAINED=\)\(.*\)/\1False/" run.env
+    sed -i "s/\(^DR_LOCAL_S3_PRETRAINED_PREFIX=\)\(.*\)/\1rl-sagemaker-pretrained/" run.env
 
     if [ "${DR_CURRENT_MODEL_BASE}" == "" ]; then
       echo "DR_MODEL_BASE=${DR_MODEL_BASE}" >>run.env
@@ -95,6 +96,7 @@ _main() {
   DR_GUI_ENABLE="False"           # 활성화시 Worker Gagebo에 VNC로 GUI 접속 가능, PW 없음 => CPU 추가 사용하며,볼일이 없으므로 비활성 권장
   DR_KINESIS_STREAM_ENABLE="True" # 활성화시 경기 합성 화면 제공 => CPU 추가 사용하지만, 보기편하므로 활성
   DR_KINESIS_STREAM_NAME=""
+  CUDA_VISIBLE_DEVICES="0"
 
   sed -i "s/\(^DR_AWS_APP_REGION=\)\(.*\)/\1$DR_AWS_APP_REGION/" system.env
   sed -i "s/\(^DR_LOCAL_S3_PROFILE=\)\(.*\)/\1$DR_LOCAL_S3_PROFILE/" system.env
@@ -109,8 +111,7 @@ _main() {
   sed -i "s/\(^DR_GUI_ENABLE=\)\(.*\)/\1$DR_GUI_ENABLE/" system.env
   sed -i "s/\(^DR_KINESIS_STREAM_ENABLE=\)\(.*\)/\1$DR_KINESIS_STREAM_ENABLE/" system.env
   sed -i "s/\(^DR_KINESIS_STREAM_NAME=\)\(.*\)/\1$DR_KINESIS_STREAM_NAME/" system.env
-
-  sed -i "s/.*CUDA_VISIBLE_DEVICES.*/CUDA_VISIBLE_DEVICES=0/" system.env
+  sed -i "s/\(^CUDA_VISIBLE_DEVICES=\)\(.*\)/\1$CUDA_VISIBLE_DEVICES/" system.env
 
   CNT=$(cat system.env | grep 'DR_LOCAL_S3_PREFIX=' | wc -l | xargs)
   if [ "x${CNT}" == "x0" ]; then
