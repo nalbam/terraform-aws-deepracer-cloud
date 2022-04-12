@@ -59,9 +59,9 @@ _main() {
   # run.env
   DR_CURRENT_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' run.env | cut -d'=' -f2)
 
-  echo "DR_MODEL_BASE: ${DR_CURRENT_MODEL_BASE} != ${DR_MODEL_BASE}"
-
   if [ "${DR_CURRENT_MODEL_BASE}" != "${DR_MODEL_BASE}" ]; then
+    echo "${DR_CURRENT_MODEL_BASE} -> ${DR_MODEL_BASE}"
+
     sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
     sed -i "s/\(^DR_LOCAL_S3_PRETRAINED=\)\(.*\)/\1False/" run.env
     sed -i "s/\(^DR_LOCAL_S3_PRETRAINED_PREFIX=\)\(.*\)/\1rl-sagemaker-pretrained/" run.env
