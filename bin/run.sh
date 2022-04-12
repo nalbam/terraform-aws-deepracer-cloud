@@ -6,13 +6,13 @@ AWS_RESION=$(aws configure get default.region)
 
 ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
 
-DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
+DR_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
 
 DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
 
 echo "AWS_RESION: ${AWS_RESION}"
 echo "ACCOUNT_ID: ${ACCOUNT_ID}"
-echo "DR_LOCAL_S3_BUCKET: ${DR_LOCAL_S3_BUCKET}"
+echo "DR_S3_BUCKET: ${DR_S3_BUCKET}"
 
 _usage() {
   cat <<EOF
@@ -43,8 +43,8 @@ _init() {
   git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
 
   # autorun.s3url
-  aws s3 cp ~/run.sh s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh
-  echo "${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}" >~/deepracer-for-cloud/autorun.s3url
+  aws s3 cp ~/run.sh s3://${DR_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh
+  echo "${DR_S3_BUCKET}/${DR_WORLD_NAME}" >~/deepracer-for-cloud/autorun.s3url
 
   cd ~/deepracer-for-cloud
   ./bin/prepare.sh
@@ -62,7 +62,7 @@ _autorun() {
   echo "DR_MODEL_BASE: ${DR_MODEL_BASE}"
 
   # download
-  aws s3 sync s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/ ./custom_files/
+  aws s3 sync s3://${DR_S3_BUCKET}/${DR_WORLD_NAME}/ ./custom_files/
 
   # run.env
   PREV_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./custom_files/run.env | cut -d'=' -f2)
@@ -130,7 +130,7 @@ _autorun() {
   # upload
   cp -rf ./run.env ./custom_files/
   cp -rf ./system.env ./custom_files/
-  aws s3 sync ./custom_files/ s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/
+  aws s3 sync ./custom_files/ s3://${DR_S3_BUCKET}/${DR_WORLD_NAME}/
 
   # _monitor
   crontab -l >/tmp/crontab.sh
