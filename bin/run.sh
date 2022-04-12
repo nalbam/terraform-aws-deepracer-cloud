@@ -119,12 +119,13 @@ _main() {
     echo "DR_UPLOAD_S3_PREFIX=drfc-1" >>system.env
   fi
 
-  date | tee ./DONE-AUTORUN
-
   _backup
 
-  dr-reload
-  dr-start-training -w -v
+  date | tee ./DONE-AUTORUN
+
+  dr-update-env
+
+  ./scripts/training/start.sh -w -v
 }
 
 case ${CMD} in
