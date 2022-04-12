@@ -50,10 +50,11 @@ _init() {
 _main() {
   cd ~/deepracer-for-cloud
 
-  _restore
-
   source ./bin/activate.sh
 
+  _restore
+
+  DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
   DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
 
   # run.env
