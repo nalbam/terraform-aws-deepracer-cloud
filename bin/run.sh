@@ -22,7 +22,7 @@ _usage() {
 EOF
 }
 
-_monitor() {
+_status() {
   UPTIME=$(uptime)
   PUBLIC_IP=$(curl -sL icanhazip.com)
   SAGEMAKER=$(docker ps | grep sagemaker | wc -l | xargs)
@@ -40,6 +40,8 @@ _monitor() {
 }
 
 _init() {
+  _status
+
   git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
 
   # autorun.s3url
@@ -133,7 +135,7 @@ _autorun() {
   cp -rf ./system.env ./custom_files/
   aws s3 sync ./custom_files/ s3://${DR_S3_BUCKET}/${DR_WORLD_NAME}/
 
-  # _monitor
+  # _status
   crontab -l >/tmp/crontab.sh
   CNT=$(cat /tmp/crontab.sh | grep 'run.sh monitor' | wc -l | xargs)
   if [ "x${CNT}" == "x0" ]; then
@@ -156,8 +158,8 @@ case ${CMD} in
 i | init)
   _init
   ;;
-m | monitor)
-  _monitor
+s | status)
+  _status
   ;;
 *)
   _autorun
