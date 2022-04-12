@@ -124,6 +124,7 @@ _main() {
   date | tee ./DONE-AUTORUN
 
   dr-reload
+  dr-stop-training
   dr-start-training -w -v
 }
 
