@@ -36,6 +36,23 @@ _restore() {
   fi
 }
 
+_monitor() {
+  UPTIME=$(uptime)
+  PUBLIC_IP=$(curl -sL icanhazip.com)
+  SAGEMAKER=$(docker ps | grep sagemaker | wc -l | xargs)
+  ROBOMAKER=$(docker ps | grep robomaker | wc -l | xargs)
+
+  SLACK_TOKEN=$(aws ssm get-parameter --name "/dr-cloud/slack_token" --with-decryption | jq .Parameter.Value -r)
+
+  if [ ! -z ${SLACK_TOKEN} ]; then
+    # send slack
+    curl -sL opspresso.github.io/tools/slack.sh | bash -s -- \
+      --token="${SLACK_TOKEN}" --username="dr-cloud" \
+      --color="good" --title="${PUBLIC_IP}" \
+      "${UPTIME}\n SAGEMAKER=\`${SAGEMAKER}\` ROBOMAKER=\`${ROBOMAKER}\`"
+  fi
+}
+
 _init() {
   git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
 
@@ -123,8 +140,16 @@ _main() {
 
   _backup
 
+  # _monitor
+  cat <<EOF >/tmp/crontab.sh
+0 * * * * bash /home/ubuntu/run.sh monitor
+EOF
+  crontab /tmp/crontab.sh
+
+  # done
   date | tee ./DONE-AUTORUN
 
+  # start
   dr-reload
   dr-stop-training
   dr-start-training -w -v
@@ -139,6 +164,9 @@ b | backup)
   ;;
 r | restore)
   _restore
+  ;;
+m | monitor)
+  _monitor
   ;;
 *)
   _main
