@@ -62,7 +62,7 @@ _autorun() {
   echo "DR_MODEL_BASE: ${DR_MODEL_BASE}" >>~/.autorun.log
 
   # download
-  aws s3 sync s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/ ./custom_files/
+  aws s3 sync s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/ ./custom_files/
 
   # run.env
   PREV_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./custom_files/run.env | cut -d'=' -f2)
@@ -130,7 +130,7 @@ _autorun() {
   # upload
   cp -rf ./run.env ./custom_files/
   cp -rf ./system.env ./custom_files/
-  aws s3 sync ./custom_files/ s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/
+  aws s3 sync ./custom_files/ s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/
 
   # _monitor
   crontab -l >/tmp/crontab.sh
