@@ -2,11 +2,17 @@
 
 CMD=${1}
 
+AWS_RESION=$(aws configure get default.region)
+
 ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
 
 DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
 
 DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
+
+echo "AWS_RESION: ${AWS_RESION}" >~/.autorun.log
+echo "ACCOUNT_ID: ${ACCOUNT_ID}" >>~/.autorun.log
+echo "DR_LOCAL_S3_BUCKET: ${DR_LOCAL_S3_BUCKET}" >>~/.autorun.log
 
 _usage() {
   cat <<EOF
@@ -72,6 +78,9 @@ _main() {
   DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
   DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
 
+  echo "DR_WORLD_NAME: ${DR_WORLD_NAME}" >>~/.autorun.log
+  echo "DR_MODEL_BASE: ${DR_MODEL_BASE}" >>~/.autorun.log
+
   _restore
 
   # run.env
@@ -80,12 +89,12 @@ _main() {
 
   if [ "${PREV_MODEL_BASE}" != "${DR_MODEL_BASE}" ]; then
     # new model
-    echo "[${PREV_MODEL_BASE}] -> [${DR_MODEL_BASE}] new"
+    echo "[${PREV_MODEL_BASE}] -> [${DR_MODEL_BASE}] new" >>~/.autorun.log
 
     sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
   else
     # clone model
-    echo "[${PREV_MODEL_NAME}] clone"
+    echo "[${PREV_MODEL_NAME}] clone" >>~/.autorun.log
 
     sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$PREV_MODEL_NAME/" run.env
 
