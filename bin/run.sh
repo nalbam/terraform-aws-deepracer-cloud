@@ -7,7 +7,6 @@ ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
 DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
 
 DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
-DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
 
 _usage() {
   cat <<EOF
@@ -54,6 +53,8 @@ _main() {
   _restore
 
   source ./bin/activate.sh
+
+  DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
 
   # run.env
   DR_CURRENT_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' run.env | cut -d'=' -f2)
