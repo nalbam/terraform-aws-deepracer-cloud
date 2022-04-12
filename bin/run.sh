@@ -76,17 +76,18 @@ _main() {
 
   # run.env
   PREV_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' run.prev | cut -d'=' -f2)
+  PREV_MODEL_NAME=$(grep -e '^DR_LOCAL_S3_MODEL_PREFIX=' run.prev | cut -d'=' -f2)
 
   if [ "${PREV_MODEL_BASE}" != "${DR_MODEL_BASE}" ]; then
     # new model
-    echo "[${PREV_MODEL_BASE}] -> [${DR_MODEL_BASE}]"
+    echo "[${PREV_MODEL_BASE}] -> [${DR_MODEL_BASE}] new"
 
     sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
   else
     # clone model
-    echo "[${PREV_MODEL_BASE}] clone"
+    echo "[${PREV_MODEL_NAME}] clone"
 
-    sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$PREV_MODEL_BASE/" run.env
+    sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$PREV_MODEL_NAME/" run.env
 
     dr-increment-training -f
   fi
