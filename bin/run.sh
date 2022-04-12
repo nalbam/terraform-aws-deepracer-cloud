@@ -67,8 +67,8 @@ _autorun() {
   aws s3 sync s3://${DR_S3_BUCKET}/${DR_WORLD_NAME}/ ./custom_files/
 
   # run.env
-  PREV_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./custom_files/run.env | cut -d'=' -f2)
-  PREV_MODEL_NAME=$(grep -e '^DR_LOCAL_S3_MODEL_PREFIX=' ./custom_files/run.env | cut -d'=' -f2)
+  PREV_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./custom_files/run.env | cut -d'=' -f2 | head -n 1)
+  PREV_MODEL_NAME=$(grep -e '^DR_LOCAL_S3_MODEL_PREFIX=' ./custom_files/run.env | cut -d'=' -f2 | head -n 1)
 
   if [ "${PREV_MODEL_BASE}" != "${DR_MODEL_BASE}" ]; then
     # new model
@@ -86,7 +86,7 @@ _autorun() {
 
   sed -i "s/\(^DR_WORLD_NAME=\)\(.*\)/\1$DR_WORLD_NAME/" run.env
 
-  CUR_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./run.env | cut -d'=' -f2)
+  CUR_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./run.env | cut -d'=' -f2 | head -n 1)
   if [ -z ${CUR_MODEL_BASE} ]; then
     echo "" >>run.env
     echo "DR_MODEL_BASE=${DR_MODEL_BASE}" >>run.env
