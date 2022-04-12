@@ -84,8 +84,13 @@ _autorun() {
 
   sed -i "s/\(^DR_WORLD_NAME=\)\(.*\)/\1$DR_WORLD_NAME/" run.env
 
-  echo "" >>run.env
-  echo "DR_MODEL_BASE=${DR_MODEL_BASE}" >>run.env
+  CUR_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./run.env | cut -d'=' -f2)
+  if [ -z ${CUR_MODEL_BASE} ]; then
+    echo "" >>run.env
+    echo "DR_MODEL_BASE=${DR_MODEL_BASE}" >>run.env
+  else
+    sed -i "s/\(^DR_MODEL_BASE=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
+  fi
 
   # image version
   RL_COACH=$(cat defaults/dependencies.json | jq .containers.rl_coach -r)
@@ -122,10 +127,6 @@ _autorun() {
   sed -i "s/\(^DR_KINESIS_STREAM_ENABLE=\)\(.*\)/\1$DR_KINESIS_STREAM_ENABLE/" system.env
   sed -i "s/\(^DR_KINESIS_STREAM_NAME=\)\(.*\)/\1$DR_KINESIS_STREAM_NAME/" system.env
   sed -i "s/\(^CUDA_VISIBLE_DEVICES=\)\(.*\)/\1$CUDA_VISIBLE_DEVICES/" system.env
-
-  echo "" >>system.env
-  echo "DR_LOCAL_S3_PREFIX=dr-cloud-1" >>system.env
-  echo "DR_UPLOAD_S3_PREFIX=dr-cloud-1" >>system.env
 
   # upload
   cp -rf ./run.env ./custom_files/
