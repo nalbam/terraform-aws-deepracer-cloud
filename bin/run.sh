@@ -85,6 +85,7 @@ _main() {
     sed -i "s/\(^DR_LOCAL_S3_PRETRAINED_PREFIX=\)\(.*\)/\1rl-sagemaker-pretrained/" run.env
 
     if [ "${DR_CURRENT_MODEL_BASE}" == "" ]; then
+      echo "" >>run.env
       echo "DR_MODEL_BASE=${DR_MODEL_BASE}" >>run.env
     else
       sed -i "s/\(^DR_MODEL_BASE=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
