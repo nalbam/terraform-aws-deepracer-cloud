@@ -13,12 +13,9 @@ tail -f -n 1000 /var/log/user-data.log
 
 dr-start-training -w -v
 
-dr-stop-training
 dr-increment-training -f
 
 dr-upload-model -f -b -p DR-2204-PRO-D-4
-
-dr-stop-viewer && dr-start-viewer
 
 #########################################################
 EOF
@@ -50,6 +47,4 @@ runuser -l ubuntu -c "aws configure set default.region ${region}"
 runuser -l ubuntu -c "aws configure set default.output json"
 
 runuser -l ubuntu -c "curl -fsSL -o ~/run.sh https://raw.githubusercontent.com/nalbam/terraform-aws-deepracer-cloud/main/bin/run.sh"
-runuser -l ubuntu -c "cd ~ && git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git"
 runuser -l ubuntu -c "bash ~/run.sh init"
-runuser -l ubuntu -c "cd ~/deepracer-for-cloud && ./bin/prepare.sh"

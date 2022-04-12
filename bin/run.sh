@@ -37,15 +37,14 @@ _init() {
 
   DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
 
+  git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
+
   # autorun.s3url
   aws s3 cp ~/run.sh s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh
   echo "${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}" >~/deepracer-for-cloud/autorun.s3url
 
-  # git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
-  # pushd ~/deepracer-for-cloud
-  # echo "s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/autorun.sh" >./autorun.s3url
-  # ./bin/prepare.sh
-  # popd
+  cd ~/deepracer-for-cloud
+  ./bin/prepare.sh
 }
 
 _main() {
