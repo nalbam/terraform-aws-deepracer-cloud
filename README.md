@@ -39,6 +39,7 @@ aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Para
 > Create a Spot Instance with AutoscalingGroup.
 
 ```bash
+# start
 terraform apply
 
 # ...
@@ -48,6 +49,9 @@ Outputs:
 bucket_local = "aws-deepracer-123456789012-local"
 bucket_upload = "aws-deepracer-123456789012-upload"
 public_ip = "54.69.00.00"
+
+# stop
+terraform apply -var desired=0
 ```
 
 ## custom_files
