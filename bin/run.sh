@@ -55,12 +55,10 @@ _main() {
 
   source ./bin/activate.sh
 
-  RL_COACH=$(cat defaults/dependencies.json | jq .containers.rl_coach -r)
-  SAGEMAKER=$(cat defaults/dependencies.json | jq .containers.sagemaker -r)
-  ROBOMAKER=$(cat defaults/dependencies.json | jq .containers.robomaker -r)
-
   # run.env
   DR_CURRENT_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' run.env | cut -d'=' -f2)
+
+  echo "DR_MODEL_BASE: ${DR_CURRENT_MODEL_BASE} != ${DR_MODEL_BASE}"
 
   if [ "${DR_CURRENT_MODEL_BASE}" != "${DR_MODEL_BASE}" ]; then
     sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
@@ -77,6 +75,11 @@ _main() {
   fi
 
   sed -i "s/\(^DR_WORLD_NAME=\)\(.*\)/\1$DR_WORLD_NAME/" run.env
+
+  # image version
+  RL_COACH=$(cat defaults/dependencies.json | jq .containers.rl_coach -r)
+  SAGEMAKER=$(cat defaults/dependencies.json | jq .containers.sagemaker -r)
+  ROBOMAKER=$(cat defaults/dependencies.json | jq .containers.robomaker -r)
 
   # system.env
   DR_AWS_APP_REGION="$(aws configure get default.region)"
