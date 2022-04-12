@@ -25,6 +25,7 @@ EOF
 _status() {
   UPTIME=$(uptime)
   PUBLIC_IP=$(curl -sL icanhazip.com)
+  IMAGES=$(docker images | grep -v REPOSITORY | wc -l | xargs)
   SAGEMAKER=$(docker ps | grep sagemaker | wc -l | xargs)
   ROBOMAKER=$(docker ps | grep robomaker | wc -l | xargs)
 
@@ -35,7 +36,7 @@ _status() {
     curl -sL opspresso.github.io/tools/slack.sh | bash -s -- \
       --token="${SLACK_TOKEN}" --username="dr-cloud" \
       --color="good" --title="${PUBLIC_IP}" \
-      "${UPTIME}\n sagemaker=\`${SAGEMAKER}\` robomaker=\`${ROBOMAKER}\`"
+      "${UPTIME}\n images=\`${IMAGES}\` sagemaker=\`${SAGEMAKER}\` robomaker=\`${ROBOMAKER}\`"
   fi
 }
 
