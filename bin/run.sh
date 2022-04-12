@@ -108,7 +108,7 @@ _main() {
   DR_UPLOAD_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-upload"
   DR_DOCKER_STYLE="compose"
   DR_SAGEMAKER_IMAGE="${SAGEMAKER}-gpu"
-  DR_ROBOMAKER_IMAGE="${ROBOMAKER}-gpu" # 5.0.1-gpu-gl
+  DR_ROBOMAKER_IMAGE="${ROBOMAKER}-cpu-avx2" # 5.0.1-gpu-gl
   DR_COACH_IMAGE="${RL_COACH}"
   DR_WORKERS="6"                  # 동시 실행 Worker 개수, 대충 4vCPU당 RoboMaker 1개 정도 수행 가능 + Sagemaker 4vCPU
   DR_GUI_ENABLE="False"           # 활성화시 Worker Gagebo에 VNC로 GUI 접속 가능, PW 없음 => CPU 추가 사용하며,볼일이 없으므로 비활성 권장
