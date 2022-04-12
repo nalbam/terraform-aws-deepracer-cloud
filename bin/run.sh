@@ -26,8 +26,8 @@ _backup() {
 _restore() {
   CNT=$(aws s3 ls s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME} | wc -l | xargs)
   if [ "x${CNT}" != "x0" ]; then
-    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/run.env ./
-    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/system.env ./
+    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/run.env ./run.prev
+    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/system.env ./system.prev
   fi
 
   CNT=$(aws s3 ls s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files | wc -l | xargs)
@@ -75,26 +75,26 @@ _main() {
   DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
 
   # run.env
-  DR_CURRENT_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' run.env | cut -d'=' -f2)
+  PREV_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' run.prev | cut -d'=' -f2)
 
-  if [ "${DR_CURRENT_MODEL_BASE}" != "${DR_MODEL_BASE}" ]; then
-    echo "${DR_CURRENT_MODEL_BASE} -> ${DR_MODEL_BASE}"
+  if [ "${PREV_MODEL_BASE}" != "${DR_MODEL_BASE}" ]; then
+    # new model
+    echo "[${PREV_MODEL_BASE}] -> [${DR_MODEL_BASE}]"
 
     sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
-    sed -i "s/\(^DR_LOCAL_S3_PRETRAINED=\)\(.*\)/\1False/" run.env
-    sed -i "s/\(^DR_LOCAL_S3_PRETRAINED_PREFIX=\)\(.*\)/\1rl-sagemaker-pretrained/" run.env
-
-    if [ "${DR_CURRENT_MODEL_BASE}" == "" ]; then
-      echo "" >>run.env
-      echo "DR_MODEL_BASE=${DR_MODEL_BASE}" >>run.env
-    else
-      sed -i "s/\(^DR_MODEL_BASE=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
-    fi
   else
+    # clone model
+    echo "[${PREV_MODEL_BASE}] clone"
+
+    sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$PREV_MODEL_BASE/" run.env
+
     dr-increment-training -f
   fi
 
   sed -i "s/\(^DR_WORLD_NAME=\)\(.*\)/\1$DR_WORLD_NAME/" run.env
+
+  echo "" >>run.env
+  echo "DR_MODEL_BASE=${DR_MODEL_BASE}" >>run.env
 
   # image version
   RL_COACH=$(cat defaults/dependencies.json | jq .containers.rl_coach -r)
@@ -132,12 +132,9 @@ _main() {
   sed -i "s/\(^DR_KINESIS_STREAM_NAME=\)\(.*\)/\1$DR_KINESIS_STREAM_NAME/" system.env
   sed -i "s/\(^CUDA_VISIBLE_DEVICES=\)\(.*\)/\1$CUDA_VISIBLE_DEVICES/" system.env
 
-  CNT=$(cat system.env | grep 'DR_LOCAL_S3_PREFIX=' | wc -l | xargs)
-  if [ "x${CNT}" == "x0" ]; then
-    echo "" >>system.env
-    echo "DR_LOCAL_S3_PREFIX=drfc-1" >>system.env
-    echo "DR_UPLOAD_S3_PREFIX=drfc-1" >>system.env
-  fi
+  echo "" >>system.env
+  echo "DR_LOCAL_S3_PREFIX=drfc-1" >>system.env
+  echo "DR_UPLOAD_S3_PREFIX=drfc-1" >>system.env
 
   _backup
 
