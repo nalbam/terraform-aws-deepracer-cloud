@@ -144,9 +144,7 @@ _main() {
   crontab -l >/tmp/crontab.sh
   CNT=$(cat /tmp/crontab.sh | grep 'run.sh monitor' | wc -l | xargs)
   if [ "x${CNT}" == "x0" ]; then
-    cat <<EOF >/tmp/crontab.sh
-0 * * * * bash /home/ubuntu/run.sh monitor
-EOF
+    echo "0 * * * * bash /home/ubuntu/run.sh monitor" >>/tmp/crontab.sh
     crontab /tmp/crontab.sh
   fi
 
