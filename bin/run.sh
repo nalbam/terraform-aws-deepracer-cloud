@@ -10,9 +10,9 @@ DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
 
 DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
 
-echo "AWS_RESION: ${AWS_RESION}" >>~/.autorun.log
-echo "ACCOUNT_ID: ${ACCOUNT_ID}" >>~/.autorun.log
-echo "DR_LOCAL_S3_BUCKET: ${DR_LOCAL_S3_BUCKET}" >>~/.autorun.log
+echo "AWS_RESION: ${AWS_RESION}"
+echo "ACCOUNT_ID: ${ACCOUNT_ID}"
+echo "DR_LOCAL_S3_BUCKET: ${DR_LOCAL_S3_BUCKET}"
 
 _usage() {
   cat <<EOF
@@ -58,13 +58,11 @@ _autorun() {
   DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
   DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
 
-  echo "DR_WORLD_NAME: ${DR_WORLD_NAME}" >>~/.autorun.log
-  echo "DR_MODEL_BASE: ${DR_MODEL_BASE}" >>~/.autorun.log
+  echo "DR_WORLD_NAME: ${DR_WORLD_NAME}"
+  echo "DR_MODEL_BASE: ${DR_MODEL_BASE}"
 
   # download
   aws s3 sync s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/ ./custom_files/
-
-  ls -al ./custom_files/ >>~/.autorun.log
 
   # run.env
   PREV_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./custom_files/run.env | cut -d'=' -f2)
@@ -72,12 +70,12 @@ _autorun() {
 
   if [ "${PREV_MODEL_BASE}" != "${DR_MODEL_BASE}" ]; then
     # new model
-    echo "[${PREV_MODEL_BASE}] -> [${DR_MODEL_BASE}] new" >>~/.autorun.log
+    echo "[${PREV_MODEL_BASE}] -> [${DR_MODEL_BASE}] new"
 
     sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
   else
     # clone model
-    echo "[${PREV_MODEL_NAME}] clone" >>~/.autorun.log
+    echo "[${PREV_MODEL_NAME}] clone"
 
     sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$PREV_MODEL_NAME/" run.env
 
