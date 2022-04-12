@@ -22,20 +22,6 @@ _usage() {
 EOF
 }
 
-_backup() {
-  aws s3 cp ./run.env s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/
-  aws s3 cp ./system.env s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/
-
-  aws s3 sync ./custom_files/ s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/
-}
-
-_restore() {
-  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/run.env ./run.prev
-  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/system.env ./system.prev
-
-  aws s3 sync s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/ ./custom_files/
-}
-
 _monitor() {
   UPTIME=$(uptime)
   PUBLIC_IP=$(curl -sL icanhazip.com)
@@ -75,7 +61,10 @@ _main() {
   echo "DR_WORLD_NAME: ${DR_WORLD_NAME}" >>~/.autorun.log
   echo "DR_MODEL_BASE: ${DR_MODEL_BASE}" >>~/.autorun.log
 
-  _restore
+  # restore
+  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/run.env ./run.prev
+  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/system.env ./system.prev
+  aws s3 sync s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/ ./custom_files/
 
   # run.env
   PREV_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' run.prev | cut -d'=' -f2)
@@ -140,7 +129,10 @@ _main() {
   echo "DR_LOCAL_S3_PREFIX=dr-cloud-1" >>system.env
   echo "DR_UPLOAD_S3_PREFIX=dr-cloud-1" >>system.env
 
-  _backup
+  # upload
+  aws s3 cp ./run.env s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/
+  aws s3 cp ./system.env s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/
+  aws s3 sync ./custom_files/ s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/
 
   # _monitor
   crontab -l >/tmp/crontab.sh
@@ -164,12 +156,6 @@ _main() {
 case ${CMD} in
 i | init)
   _init
-  ;;
-b | backup)
-  _backup
-  ;;
-r | restore)
-  _restore
   ;;
 m | monitor)
   _monitor
