@@ -30,16 +30,10 @@ _backup() {
 }
 
 _restore() {
-  CNT=$(aws s3 ls s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME} | wc -l | xargs)
-  if [ "x${CNT}" != "x0" ]; then
-    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/run.env ./run.prev
-    aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/system.env ./system.prev
-  fi
+  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/run.env ./run.prev
+  aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/system.env ./system.prev
 
-  CNT=$(aws s3 ls s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files | wc -l | xargs)
-  if [ "x${CNT}" != "x0" ]; then
-    aws s3 sync s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/ ./custom_files/
-  fi
+  aws s3 sync s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/ ./custom_files/
 }
 
 _monitor() {
