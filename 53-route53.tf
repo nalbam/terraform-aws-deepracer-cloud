@@ -7,7 +7,7 @@ data "aws_route53_zone" "worker" {
 }
 
 resource "aws_route53_record" "worker" {
-  count = var.zone_name == "" ? 0 : var.desired > 0 ? 1 : 0
+  count = var.zone_name == "" ? 0 : 1
 
   name    = var.name
   type    = "A"
