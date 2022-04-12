@@ -69,10 +69,10 @@ _main() {
 
   source ./bin/activate.sh
 
-  _restore
-
   DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
   DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
+
+  _restore
 
   # run.env
   PREV_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' run.prev | cut -d'=' -f2)
