@@ -64,6 +64,8 @@ _autorun() {
   # download
   aws s3 sync s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/ ./custom_files/
 
+  ls -al ./custom_files/ >>~/.autorun.log
+
   # run.env
   PREV_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./custom_files/run.env | cut -d'=' -f2)
   PREV_MODEL_NAME=$(grep -e '^DR_LOCAL_S3_MODEL_PREFIX=' ./custom_files/run.env | cut -d'=' -f2)
