@@ -141,10 +141,14 @@ _main() {
   _backup
 
   # _monitor
-  cat <<EOF >/tmp/crontab.sh
+  crontab -l >/tmp/crontab.sh
+  CNT=$(cat /tmp/crontab.sh | grep 'run.sh monitor' | wc -l | xargs)
+  if [ "x${CNT}" == "x0" ]; then
+    cat <<EOF >/tmp/crontab.sh
 0 * * * * bash /home/ubuntu/run.sh monitor
 EOF
-  crontab /tmp/crontab.sh
+    crontab /tmp/crontab.sh
+  fi
 
   # done
   date | tee ./DONE-AUTORUN
