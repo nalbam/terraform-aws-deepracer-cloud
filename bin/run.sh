@@ -4,6 +4,11 @@ CMD=${1}
 
 ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
 
+DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
+
+DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
+DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
+
 _usage() {
   cat <<EOF
 ================================================================================
@@ -33,10 +38,6 @@ _restore() {
 }
 
 _init() {
-  DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
-
-  DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
-
   git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
 
   # autorun.s3url
@@ -48,11 +49,6 @@ _init() {
 }
 
 _main() {
-  DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
-
-  DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
-  DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
-
   cd ~/deepracer-for-cloud
 
   _restore
