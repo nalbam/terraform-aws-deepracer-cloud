@@ -134,8 +134,8 @@ _main() {
   sed -i "s/\(^CUDA_VISIBLE_DEVICES=\)\(.*\)/\1$CUDA_VISIBLE_DEVICES/" system.env
 
   echo "" >>system.env
-  echo "DR_LOCAL_S3_PREFIX=drfc-1" >>system.env
-  echo "DR_UPLOAD_S3_PREFIX=drfc-1" >>system.env
+  echo "DR_LOCAL_S3_PREFIX=dr-cloud-1" >>system.env
+  echo "DR_UPLOAD_S3_PREFIX=dr-cloud-1" >>system.env
 
   _backup
 
