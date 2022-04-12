@@ -13,19 +13,13 @@ EOF
 }
 
 _backup() {
-  pushd ~/deepracer-for-cloud
-
   aws s3 cp ./run.env s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/
   aws s3 cp ./system.env s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/
 
   aws s3 sync ./custom_files/ s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/
-
-  popd
 }
 
 _restore() {
-  pushd ~/deepracer-for-cloud
-
   CNT=$(aws s3 ls s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME} | wc -l | xargs)
   if [ "x${CNT}" != "x0" ]; then
     aws s3 cp s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/run.env ./
@@ -36,8 +30,6 @@ _restore() {
   if [ "x${CNT}" != "x0" ]; then
     aws s3 sync s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/ ./custom_files/
   fi
-
-  popd
 }
 
 _init() {
@@ -62,9 +54,11 @@ _main() {
   DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
   DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
 
+  cd ~/deepracer-for-cloud
+
   _restore
 
-  pushd ~/deepracer-for-cloud
+  source ./bin/activate.sh
 
   RL_COACH=$(cat defaults/dependencies.json | jq .containers.rl_coach -r)
   SAGEMAKER=$(cat defaults/dependencies.json | jq .containers.sagemaker -r)
@@ -83,7 +77,7 @@ _main() {
       sed -i "s/\(^DR_MODEL_BASE=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
     fi
   else
-    _increment
+    dr-increment-training -f
   fi
 
   sed -i "s/\(^DR_WORLD_NAME=\)\(.*\)/\1$DR_WORLD_NAME/" run.env
@@ -128,57 +122,10 @@ _main() {
 
   date | tee ./DONE-AUTORUN
 
-  popd
-
   _backup
-}
 
-_activate() {
-  pushd ~/deepracer-for-cloud
-
-  source ./bin/activate.sh
-
-  popd
-}
-
-_start() {
-  pushd ~/deepracer-for-cloud
-
-  dr-update && dr-upload-custom-files && dr-start-training -w
-
-  popd
-}
-
-_increment() {
-  pushd ~/deepracer-for-cloud
-
-  dr-increment-training -f
-
-  popd
-}
-
-_viewer() {
-  pushd ~/deepracer-for-cloud
-
-  dr-stop-viewer && dr-start-viewer
-
-  popd
-}
-
-_analysis() {
-  pushd ~/deepracer-for-cloud
-
-  dr-stop-loganalysis && dr-start-loganalysis
-
-  popd
-}
-
-_upload() {
-  pushd ~/deepracer-for-cloud
-
-  dr-upload-model
-
-  popd
+  dr-reload
+  dr-start-training -w -v
 }
 
 case ${CMD} in
@@ -191,28 +138,7 @@ b | backup)
 r | restore)
   _restore
   ;;
-s | start)
-  _activate
-  _start
-  ;;
-v | viewer)
-  _activate
-  _viewer
-  ;;
-a | analysis)
-  _activate
-  _analysis
-  ;;
-u | upload)
-  _activate
-  _upload
-  ;;
 *)
-  _activate
   _main
-  _start
-  sleep 60
-  _viewer
-  _analysis
   ;;
 esac
