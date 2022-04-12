@@ -50,7 +50,7 @@ _init() {
   ./bin/prepare.sh
 }
 
-_main() {
+_autorun() {
   cd ~/deepracer-for-cloud
 
   source ./bin/activate.sh
@@ -161,6 +161,6 @@ m | monitor)
   _monitor
   ;;
 *)
-  _main
+  _autorun
   ;;
 esac
