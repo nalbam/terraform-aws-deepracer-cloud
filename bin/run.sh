@@ -137,11 +137,12 @@ _autorun() {
 
   # _status
   crontab -l >/tmp/crontab.sh
-  CNT=$(cat /tmp/crontab.sh | grep 'run.sh monitor' | wc -l | xargs)
+  CNT=$(cat /tmp/crontab.sh | grep 'run.sh status' | wc -l | xargs)
   if [ "x${CNT}" == "x0" ]; then
+    _status
     # echo "@reboot /home/ubuntu/.runonce.sh___init_sh__c_aws__a_gpu" > /tmp/crontab.sh
     echo "" >>/tmp/crontab.sh
-    echo "0 * * * * bash /home/ubuntu/run.sh monitor" >>/tmp/crontab.sh
+    echo "0 * * * * bash /home/ubuntu/run.sh status" >>/tmp/crontab.sh
     crontab /tmp/crontab.sh
   fi
 
