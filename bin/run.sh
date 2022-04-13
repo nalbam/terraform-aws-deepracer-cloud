@@ -75,17 +75,18 @@ _autorun() {
     # new model
     echo "[${PREV_MODEL_BASE}] -> [${DR_MODEL_BASE}] new"
 
+    sed -i "s/\(^DR_WORLD_NAME=\)\(.*\)/\1$DR_WORLD_NAME/" run.env
     sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$DR_MODEL_BASE/" run.env
+    sed -i "s/\(^DR_LOCAL_S3_PRETRAINED=\)\(.*\)/\1False/" run.env
   else
     # clone model
     echo "[${PREV_MODEL_NAME}] clone"
 
+    sed -i "s/\(^DR_WORLD_NAME=\)\(.*\)/\1$DR_WORLD_NAME/" run.env
     sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$PREV_MODEL_NAME/" run.env
 
     dr-increment-training -f
   fi
-
-  sed -i "s/\(^DR_WORLD_NAME=\)\(.*\)/\1$DR_WORLD_NAME/" run.env
 
   CUR_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./run.env | cut -d'=' -f2 | head -n 1)
   if [ -z ${CUR_MODEL_BASE} ]; then
