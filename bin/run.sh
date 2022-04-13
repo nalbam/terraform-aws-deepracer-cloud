@@ -161,6 +161,7 @@ _autorun() {
   # start
   dr-reload
   dr-stop-training
+  dr-upload-custom-files
   dr-start-training -w -v
 }
 
