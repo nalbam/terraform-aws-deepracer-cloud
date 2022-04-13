@@ -29,10 +29,12 @@ _status() {
   SAGEMAKER=$(docker ps | grep sagemaker | wc -l | xargs)
   ROBOMAKER=$(docker ps | grep robomaker | wc -l | xargs)
 
+  DR_WORKERS=$(grep -e '^DR_WORKERS=' ~/deepracer-for-cloud/run.env | cut -d'=' -f2 | head -n 1)
+
   SLACK_TOKEN=$(aws ssm get-parameter --name "/dr-cloud/slack_token" --with-decryption | jq .Parameter.Value -r)
 
   if [ ! -z ${SLACK_TOKEN} ]; then
-    if [ "${SAGEMAKER}" != "1" ] || [ "${ROBOMAKER}" != "6" ]; then
+    if [ "${SAGEMAKER}" != "1" ] || [ "${ROBOMAKER}" != "${DR_WORKERS}" ]; then
       # send slack
       curl -sL opspresso.github.io/tools/slack.sh | bash -s -- \
         --token="${SLACK_TOKEN}" --username="dr-cloud" \
