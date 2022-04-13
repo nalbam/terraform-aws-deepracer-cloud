@@ -75,7 +75,7 @@ _main() {
     fi
 
     # create dynamodb table
-    COUNT=$(aws dynamodb list-tables | jq -r .TableNames | grep ${LOCK_TABLE} | wc -l | xargs)
+    COUNT=$(aws dynamodb list-tables --region ${REGION} | jq -r .TableNames | grep ${LOCK_TABLE} | wc -l | xargs)
     if [ "x${COUNT}" == "x0" ]; then
         _command "aws dynamodb create-table --table-name ${LOCK_TABLE}"
         aws dynamodb create-table \
