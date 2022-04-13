@@ -132,6 +132,13 @@ _autorun() {
   sed -i "s/\(^DR_KINESIS_STREAM_NAME=\)\(.*\)/\1$DR_KINESIS_STREAM_NAME/" system.env
   sed -i "s/\(^CUDA_VISIBLE_DEVICES=\)\(.*\)/\1$CUDA_VISIBLE_DEVICES/" system.env
 
+  DR_LOCAL_S3_PREFIX=$(grep -e '^DR_LOCAL_S3_PREFIX=' ./system.env | cut -d'=' -f2 | head -n 1)
+  if [ -z ${DR_LOCAL_S3_PREFIX} ]; then
+    echo "" >>system.env
+    echo "DR_LOCAL_S3_PREFIX=dr-cloud-1" >>system.env
+    echo "DR_UPLOAD_S3_PREFIX=dr-cloud-1" >>system.env
+  fi
+
   # upload
   cp -rf ./run.env ./custom_files/
   cp -rf ./system.env ./custom_files/
