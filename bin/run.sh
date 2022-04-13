@@ -32,11 +32,13 @@ _status() {
   SLACK_TOKEN=$(aws ssm get-parameter --name "/dr-cloud/slack_token" --with-decryption | jq .Parameter.Value -r)
 
   if [ ! -z ${SLACK_TOKEN} ]; then
-    # send slack
-    curl -sL opspresso.github.io/tools/slack.sh | bash -s -- \
-      --token="${SLACK_TOKEN}" --username="dr-cloud" \
-      --color="good" --title="${PUBLIC_IP}" \
-      "${UPTIME}\n images=\`${IMAGES}\` sagemaker=\`${SAGEMAKER}\` robomaker=\`${ROBOMAKER}\`"
+    if [ "${SAGEMAKER}" != "1" ] || [ "${SAGEMAKER}" != "6" ]; then
+      # send slack
+      curl -sL opspresso.github.io/tools/slack.sh | bash -s -- \
+        --token="${SLACK_TOKEN}" --username="dr-cloud" \
+        --color="good" --title="${PUBLIC_IP}" \
+        "${UPTIME}\n images=\`${IMAGES}\` sagemaker=\`${SAGEMAKER}\` robomaker=\`${ROBOMAKER}\`"
+    fi
   fi
 }
 
