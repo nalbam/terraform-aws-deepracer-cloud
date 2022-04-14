@@ -100,6 +100,7 @@ _autorun() {
 
     sed -i "s/\(^DR_WORLD_NAME=\)\(.*\)/\1$DR_WORLD_NAME/" run.env
     sed -i "s/\(^DR_LOCAL_S3_MODEL_PREFIX=\)\(.*\)/\1$PREV_MODEL_NAME/" run.env
+    sed -i "s/\(^DR_LOCAL_S3_PRETRAINED_CHECKPOINT=\)\(.*\)/\1best/" run.env
 
     dr-increment-training -f
   fi
