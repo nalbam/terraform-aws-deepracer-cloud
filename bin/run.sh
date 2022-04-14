@@ -156,8 +156,8 @@ _autorun() {
   fi
 
   # upload
-  cp -rf ./run.env ./custom_files/
-  cp -rf ./system.env ./custom_files/
+  cat ./run.env >./custom_files/run.env
+  cat ./system.env >./custom_files/system.env
   aws s3 sync ./custom_files/ s3://${DR_S3_BUCKET}/${DR_WORLD_NAME}/
 
   # status
