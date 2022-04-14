@@ -40,7 +40,7 @@ _status() {
       PUBLIC_IP=$(curl -sL icanhazip.com)
       IMAGES=$(docker images | grep -v REPOSITORY | wc -l | xargs)
 
-      TITLE="${DR_WORLD_NAME} : ${DR_MODEL_BASE}"
+      TITLE="${DR_WORLD_NAME} : ${CUR_MODEL_NAME:-$DR_MODEL_BASE}"
       TEXT="${UPTIME}\n images=\`${IMAGES}\` sagemaker=\`${SAGEMAKER}\` robomaker=\`${ROBOMAKER}\`"
       FOOTER="${PUBLIC_IP}"
 
@@ -101,6 +101,8 @@ _autorun() {
 
     dr-increment-training -f
   fi
+
+  CUR_MODEL_NAME=$(grep -e '^DR_LOCAL_S3_MODEL_PREFIX=' ./run.env | cut -d'=' -f2 | tail -n 1)
 
   CUR_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./run.env | cut -d'=' -f2 | tail -n 1)
   if [ -z ${CUR_MODEL_BASE} ]; then
