@@ -5,7 +5,7 @@ terraform {
 
   backend "s3" {
     region         = "ap-northeast-2"
-    bucket         = "terraform-workshop-968005369378"
+    bucket         = "terraform-workshop-082867736673"
     key            = "deepracer-local.tfstate"
     dynamodb_table = "terraform-resource-lock"
     encrypt        = true
@@ -14,7 +14,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "3.75.1"
+      version = "4.8.0"
     }
   }
 }

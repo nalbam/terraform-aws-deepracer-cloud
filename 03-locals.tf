@@ -14,13 +14,4 @@ locals {
     "Name"    = var.name
     "Purpose" = "deepracer"
   }
-
-  asg_tags = [
-    for item in keys(local.tags) :
-    tomap({
-      "key"                 = item
-      "value"               = element(values(local.tags), index(keys(local.tags), item))
-      "propagate_at_launch" = true
-    })
-  ]
 }
