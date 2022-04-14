@@ -3,16 +3,20 @@
 CMD=${1}
 
 AWS_RESION=$(aws configure get default.region)
-
 ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
-
-DR_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
-
-DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
 
 echo "AWS_RESION: ${AWS_RESION}"
 echo "ACCOUNT_ID: ${ACCOUNT_ID}"
+
+DR_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
+
 echo "DR_S3_BUCKET: ${DR_S3_BUCKET}"
+
+DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
+DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
+
+echo "DR_WORLD_NAME: ${DR_WORLD_NAME}"
+echo "DR_MODEL_BASE: ${DR_MODEL_BASE}"
 
 _usage() {
   cat <<EOF
