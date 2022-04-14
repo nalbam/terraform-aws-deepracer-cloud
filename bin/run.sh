@@ -33,17 +33,17 @@ _status() {
     SAGEMAKER=$(docker ps | grep sagemaker | wc -l | xargs)
     ROBOMAKER=$(docker ps | grep robomaker | wc -l | xargs)
 
-    DR_WORKERS=$(grep -e '^DR_WORKERS=' ~/deepracer-for-cloud/system.env | cut -d'=' -f2 | head -n 1)
+    DR_WORKERS=$(grep -e '^DR_WORKERS=' ~/deepracer-for-cloud/system.env | cut -d'=' -f2 | tail -n 1)
 
     if [ "${SAGEMAKER}" != "1" ] || [ "${ROBOMAKER}" != "${DR_WORKERS}" ]; then
       UPTIME=$(uptime)
       PUBLIC_IP=$(curl -sL icanhazip.com)
       IMAGES=$(docker images | grep -v REPOSITORY | wc -l | xargs)
 
-      DR_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ~/deepracer-for-cloud/run.env | cut -d'=' -f2 | head -n 1)
-      DR_MODEL_NAME=$(grep -e '^DR_LOCAL_S3_MODEL_PREFIX=' ~/deepracer-for-cloud/run.env | cut -d'=' -f2 | head -n 1)
+      DR_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ~/deepracer-for-cloud/run.env | cut -d'=' -f2 | tail -n 1)
+      DR_MODEL_NAME=$(grep -e '^DR_LOCAL_S3_MODEL_PREFIX=' ~/deepracer-for-cloud/run.env | cut -d'=' -f2 | tail -n 1)
 
-      TITLE="${DR_MODEL_BASE} - ${DR_MODEL_NAME}"
+      TITLE="${DR_MODEL_BASE} : ${DR_MODEL_NAME}"
       FOOTER="${PUBLIC_IP}"
       TEXT="${UPTIME}\n images=\`${IMAGES}\` sagemaker=\`${SAGEMAKER}\` robomaker=\`${ROBOMAKER}\`"
 
@@ -84,8 +84,8 @@ _autorun() {
   aws s3 sync s3://${DR_S3_BUCKET}/${DR_WORLD_NAME}/ ./custom_files/
 
   # run.env
-  PREV_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./custom_files/run.env | cut -d'=' -f2 | head -n 1)
-  PREV_MODEL_NAME=$(grep -e '^DR_LOCAL_S3_MODEL_PREFIX=' ./custom_files/run.env | cut -d'=' -f2 | head -n 1)
+  PREV_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./custom_files/run.env | cut -d'=' -f2 | tail -n 1)
+  PREV_MODEL_NAME=$(grep -e '^DR_LOCAL_S3_MODEL_PREFIX=' ./custom_files/run.env | cut -d'=' -f2 | tail -n 1)
 
   if [ "${PREV_MODEL_BASE}" != "${DR_MODEL_BASE}" ]; then
     # new model
@@ -104,7 +104,7 @@ _autorun() {
     dr-increment-training -f
   fi
 
-  CUR_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./run.env | cut -d'=' -f2 | head -n 1)
+  CUR_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ./run.env | cut -d'=' -f2 | tail -n 1)
   if [ -z ${CUR_MODEL_BASE} ]; then
     echo "" >>run.env
     echo "DR_MODEL_BASE=${DR_MODEL_BASE}" >>run.env
@@ -148,7 +148,7 @@ _autorun() {
   sed -i "s/\(^DR_KINESIS_STREAM_NAME=\)\(.*\)/\1$DR_KINESIS_STREAM_NAME/" system.env
   sed -i "s/\(^CUDA_VISIBLE_DEVICES=\)\(.*\)/\1$CUDA_VISIBLE_DEVICES/" system.env
 
-  DR_LOCAL_S3_PREFIX=$(grep -e '^DR_LOCAL_S3_PREFIX=' ./system.env | cut -d'=' -f2 | head -n 1)
+  DR_LOCAL_S3_PREFIX=$(grep -e '^DR_LOCAL_S3_PREFIX=' ./system.env | cut -d'=' -f2 | tail -n 1)
   if [ -z ${DR_LOCAL_S3_PREFIX} ]; then
     echo "" >>system.env
     echo "DR_LOCAL_S3_PREFIX=dr-cloud-1" >>system.env
