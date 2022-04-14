@@ -40,12 +40,9 @@ _status() {
       PUBLIC_IP=$(curl -sL icanhazip.com)
       IMAGES=$(docker images | grep -v REPOSITORY | wc -l | xargs)
 
-      DR_MODEL_BASE=$(grep -e '^DR_MODEL_BASE=' ~/deepracer-for-cloud/run.env | cut -d'=' -f2 | tail -n 1)
-      DR_MODEL_NAME=$(grep -e '^DR_LOCAL_S3_MODEL_PREFIX=' ~/deepracer-for-cloud/run.env | cut -d'=' -f2 | tail -n 1)
-
-      TITLE="${DR_MODEL_BASE} : ${DR_MODEL_NAME}"
-      FOOTER="${PUBLIC_IP}"
+      TITLE="${DR_WORLD_NAME} : ${DR_MODEL_BASE}"
       TEXT="${UPTIME}\n images=\`${IMAGES}\` sagemaker=\`${SAGEMAKER}\` robomaker=\`${ROBOMAKER}\`"
+      FOOTER="${PUBLIC_IP}"
 
       # send slack
       curl -sL opspresso.github.io/tools/slack.sh | bash -s -- \
