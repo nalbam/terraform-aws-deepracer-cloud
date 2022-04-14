@@ -15,7 +15,7 @@ dr-start-training -w -v
 
 dr-increment-training -f
 
-dr-upload-model -f -b -p DR-2204-PRO-D-4
+dr-upload-model -f -b
 
 #########################################################
 EOF
