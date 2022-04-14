@@ -158,7 +158,7 @@ _autorun() {
   # upload
   cat ./run.env >./custom_files/run.env
   cat ./system.env >./custom_files/system.env
-  aws s3 sync --exact-timestamps ./custom_files/ s3://${DR_S3_BUCKET}/${DR_WORLD_NAME}/
+  aws s3 sync ./custom_files/ s3://${DR_S3_BUCKET}/${DR_WORLD_NAME}/
 
   # status
   crontab -l >/tmp/crontab.sh
