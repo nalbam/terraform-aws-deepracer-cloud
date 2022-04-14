@@ -29,7 +29,7 @@ _status() {
     SAGEMAKER=$(docker ps | grep sagemaker | wc -l | xargs)
     ROBOMAKER=$(docker ps | grep robomaker | wc -l | xargs)
 
-    DR_WORKERS=$(grep -e '^DR_WORKERS=' ~/deepracer-for-cloud/run.env | cut -d'=' -f2 | head -n 1)
+    DR_WORKERS=$(grep -e '^DR_WORKERS=' ~/deepracer-for-cloud/system.env | cut -d'=' -f2 | head -n 1)
 
     if [ "${SAGEMAKER}" != "1" ] || [ "${ROBOMAKER}" != "${DR_WORKERS}" ]; then
       UPTIME=$(uptime)
