@@ -51,6 +51,10 @@ rm -rf /usr/bin/python3 && ln -s /usr/bin/python3.9 /usr/bin/python3
 rm -rf /usr/bin/python3-config && ln -s /usr/bin/python3.9-config /usr/bin/python3-config
 python3 --version
 
+curl -o "awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+unzip awscliv2.zip
+./aws/install
+
 runuser -l ubuntu -c "aws configure set default.region ${region}"
 runuser -l ubuntu -c "aws configure set default.output json"
 
