@@ -43,6 +43,15 @@ lsblk
 
 apt-get update && apt-get install -y git vim tmux nmon
 
+apt-get install -y software-properties-common
+add-apt-repository ppa:deadsnakes/ppa -y
+apt-get install -y python3.9
+
+rm -rf /usr/bin/python3 python3-config
+ln -s /usr/bin/python3.9 /usr/bin/python3
+ln -s /usr/bin/python3.9-config /usr/bin/python3-config
+python3 --version
+
 runuser -l ubuntu -c "aws configure set default.region ${region}"
 runuser -l ubuntu -c "aws configure set default.output json"
 
