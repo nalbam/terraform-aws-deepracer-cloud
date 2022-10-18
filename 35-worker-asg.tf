@@ -12,7 +12,7 @@ resource "aws_autoscaling_group" "worker" {
 
   suspended_processes = var.suspended_processes
 
-  target_group_arns = aws_lb_target_group.http.*.arn
+  # target_group_arns = aws_lb_target_group.http.*.arn
 
   launch_template {
     id      = aws_launch_template.worker.id
