@@ -10,8 +10,8 @@
 aws configure set default.region us-west-2
 aws configure set default.output json
 
-DR_WORLD_NAME="2022_april_pro"
-DR_MODEL_BASE="DR-2204-PRO-A-1"
+DR_WORLD_NAME="2022_reinvent_champ"
+DR_MODEL_BASE="DR-2210-PRO-A-1"
 
 # put aws ssm parameter store
 aws ssm put-parameter --name "/dr-cloud/world_name" --value "${DR_WORLD_NAME}" --type SecureString --overwrite | jq .
