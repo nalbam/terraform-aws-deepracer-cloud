@@ -64,8 +64,8 @@ ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
 
 DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
 
-DR_WORLD_NAME="2022_april_pro"
-DR_MODEL_BASE="DR-2204-PRO-B-1" # new model
+DR_WORLD_NAME="2022_reinvent_champ"
+DR_MODEL_BASE="DR-2210-PRO-B-1" # new model
 
 aws ssm put-parameter --name "/dr-cloud/world_name" --value "${DR_WORLD_NAME}" --type SecureString --overwrite | jq .
 aws ssm put-parameter --name "/dr-cloud/model_base" --value "${DR_MODEL_BASE}" --type SecureString --overwrite | jq .
