@@ -12,7 +12,7 @@ variable "name" {
 
 variable "instance_type" {
   type    = string
-  default = "g4dn.8xlarge"
+  default = "g5.8xlarge"
 }
 
 variable "ami_id" {
