@@ -10,7 +10,7 @@ resource "aws_autoscaling_group" "worker" {
 
   vpc_zone_identifier = local.subnet_ids
 
-  suspended_processes = var.suspended_processes
+  # suspended_processes = var.suspended_processes
 
   # target_group_arns = aws_lb_target_group.http.*.arn
 
