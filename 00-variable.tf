@@ -104,7 +104,7 @@ variable "key_name" {
   default = "nalbam-seoul"
 }
 
-variable "zone_name" {
-  type    = string
-  default = ""
-}
+# variable "zone_name" {
+#   type    = string
+#   default = ""
+# }
