@@ -2,6 +2,12 @@
 
 * <https://github.com/aws-deepracer-community/deepracer-for-cloud>
 
+## clone
+
+```bash
+git clone https://github.com/nalbam/terraform-aws-deepracer-cloud
+```
+
 ## config
 
 > Save the environment variable json in AWS SSM.
