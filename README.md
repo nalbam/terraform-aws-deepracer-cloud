@@ -16,16 +16,16 @@ git clone https://github.com/nalbam/terraform-aws-deepracer-cloud
 aws configure set default.region us-west-2
 aws configure set default.output json
 
-DR_WORLD_NAME="2022_reinvent_champ"
-DR_MODEL_BASE="DR-2210-PRO-A-1"
+export DR_WORLD_NAME="2022_reinvent_champ"
+export DR_MODEL_BASE="DR-22-CHAMP-A-1"
 
 # put aws ssm parameter store
 aws ssm put-parameter --name "/dr-cloud/world_name" --value "${DR_WORLD_NAME}" --type SecureString --overwrite | jq .
 aws ssm put-parameter --name "/dr-cloud/model_base" --value "${DR_MODEL_BASE}" --type SecureString --overwrite | jq .
 
-# get aws ssm parameter store
-aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r
-aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r
+# # get aws ssm parameter store
+# aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r
+# aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r
 ```
 
 ## replace
@@ -60,21 +60,21 @@ public_ip = "54.69.00.00"
 terraform apply -var desired=0
 ```
 
-## custom_files
+## new model
 
 ```bash
 aws configure set default.region us-west-2
 aws configure set default.output json
 
-ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
+export ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
 
-DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
+export DR_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
 
-DR_WORLD_NAME="2022_reinvent_champ"
-DR_MODEL_BASE="DR-2210-PRO-B-1" # new model
+export DR_WORLD_NAME="2022_reinvent_champ"
+export DR_MODEL_BASE="DR-22-CHAMP-B-1" # new model
 
 aws ssm put-parameter --name "/dr-cloud/world_name" --value "${DR_WORLD_NAME}" --type SecureString --overwrite | jq .
 aws ssm put-parameter --name "/dr-cloud/model_base" --value "${DR_MODEL_BASE}" --type SecureString --overwrite | jq .
 
-aws s3 sync ./custom_files/ s3://${DR_LOCAL_S3_BUCKET}/${DR_WORLD_NAME}/custom_files/
+aws s3 sync --exact-timestamps ./${DR_WORLD_NAME}/ s3://${DR_S3_BUCKET}/${DR_WORLD_NAME}/
 ```
