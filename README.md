@@ -13,7 +13,7 @@ git clone https://github.com/nalbam/terraform-aws-deepracer-cloud
 > Save the environment variable json in AWS SSM.
 
 ```bash
-aws configure set default.region us-west-2
+aws configure set default.region us-east-1
 aws configure set default.output json
 
 export DR_WORLD_NAME="2022_reinvent_champ"
@@ -36,7 +36,7 @@ aws ssm put-parameter --name "/dr-cloud/model_base" --value "${DR_MODEL_BASE}" -
 ./replace.sh
 
 # ACCOUNT_ID = 123456789012
-# REGION = ap-northeast-2
+# REGION = us-east-1
 # BUCKET = terraform-workshop-123456789012
 ```
 
@@ -63,7 +63,7 @@ terraform apply -var desired=0
 ## new model
 
 ```bash
-aws configure set default.region us-west-2
+aws configure set default.region us-east-1
 aws configure set default.output json
 
 export ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account -r)
