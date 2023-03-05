@@ -13,9 +13,9 @@ tail -f -n 1000 /var/log/user-data.log
 
 dr-start-training -w -v
 
-dr-increment-training -f
-
 dr-upload-model -f -b
+
+dr-increment-training -f
 
 #########################################################
 EOF
