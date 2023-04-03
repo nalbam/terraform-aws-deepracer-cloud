@@ -37,7 +37,7 @@ chown -R ubuntu:ubuntu /data
 mount -a
 
 mkdir -p /data/docker_dir
-cat /etc/docker/daemon.json | jq --arg graph /data/docker_dir '. + {data-root: $graph}' | tee /etc/docker/daemon.json
+cat /etc/docker/daemon.json | jq --arg graph /data/docker_dir '. + {graph: $graph}' | tee /etc/docker/daemon.json
 systemctl restart docker
 lsblk
 
