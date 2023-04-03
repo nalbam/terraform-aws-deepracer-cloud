@@ -17,7 +17,7 @@ variable "instance_type" {
 
 variable "ami_id" {
   type    = string
-  default = ""
+  default = "ami-098c6f323d2242d15"
 }
 
 variable "ebs_optimized" {
