@@ -14,6 +14,7 @@ echo "DR_S3_BUCKET: ${DR_S3_BUCKET}"
 
 DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
 DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
+DR_DIRECTION=$(aws ssm get-parameter --name "/dr-cloud/direction" --with-decryption | jq .Parameter.Value -r)
 
 echo "DR_WORLD_NAME: ${DR_WORLD_NAME}"
 echo "DR_MODEL_BASE: ${DR_MODEL_BASE}"
@@ -73,6 +74,7 @@ _autorun() {
 
   DR_WORLD_NAME=$(aws ssm get-parameter --name "/dr-cloud/world_name" --with-decryption | jq .Parameter.Value -r)
   DR_MODEL_BASE=$(aws ssm get-parameter --name "/dr-cloud/model_base" --with-decryption | jq .Parameter.Value -r)
+  DR_DIRECTION=$(aws ssm get-parameter --name "/dr-cloud/direction" --with-decryption | jq .Parameter.Value -r)
 
   echo "DR_WORLD_NAME: ${DR_WORLD_NAME}"
   echo "DR_MODEL_BASE: ${DR_MODEL_BASE}"
@@ -100,6 +102,12 @@ _autorun() {
     sed -i "s/\(^DR_LOCAL_S3_PRETRAINED_CHECKPOINT=\)\(.*\)/\1best/" run.env
 
     dr-increment-training -f
+  fi
+
+  if [ "${DR_DIRECTION}" == "CW" ]; then
+    REVERSE_DIRECTION="True"
+    sed -i "s/\(^DR_EVAL_REVERSE_DIRECTION=\)\(.*\)/\1$REVERSE_DIRECTION/" run.env
+    sed -i "s/\(^DR_TRAIN_REVERSE_DIRECTION=\)\(.*\)/\1$REVERSE_DIRECTION/" run.env
   fi
 
   CUR_MODEL_NAME=$(grep -e '^DR_LOCAL_S3_MODEL_PREFIX=' ./run.env | cut -d'=' -f2 | tail -n 1)
