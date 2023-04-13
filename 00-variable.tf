@@ -17,7 +17,9 @@ variable "instance_type" {
 
 variable "ami_id" {
   type    = string
-  default = "ami-098c6f323d2242d15"
+  default = "ami-0365f1c02d110fa96"
+  # ami-0365f1c02d110fa96 - AWS Deep Learning Base AMI (Ubuntu 18.04) Version 49.0 - us-east-1
+  # ami-01242c3178ffa1b87 - AWS Deep Learning Base AMI (Ubuntu 18.04) Version 49.0 - us-west-2
 }
 
 variable "ebs_optimized" {

@@ -15,9 +15,6 @@ data "aws_subnets" "default" {
 }
 
 data "aws_ami" "default" {
-  # ami-098c6f323d2242d15 - Deep Learning Base AMI (Ubuntu 18.04) Version 52.0
-  # ami-0894d52db7803f39b - Deep Learning Base AMI (Ubuntu 18.04) Version 55.0
-
   owners = ["898082745236"]
 
   most_recent = true
