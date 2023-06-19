@@ -96,17 +96,42 @@ variable "ports" {
 variable "allow_ip_address" {
   type = list(string)
   default = [
-    "0.0.0.0/0",
+    #"0.0.0.0/0",
+    "96.245.253.208/32"
     # "39.117.14.79/32", # echo "$(curl -sL icanhazip.com)/32"
   ]
 }
 
 variable "key_name" {
   type    = string
-  default = "nalbam-seoul"
+  default = "turboracers-keypair"
 }
 
 # variable "zone_name" {
 #   type    = string
 #   default = ""
 # }
+
+variable "ssm_parameter_name_prefix" {
+  type    = string
+  default = "/dr-cloud/"
+}
+
+
+variable "bucket_name_prefix" {
+  type    = string
+  default = "aws-deepracer"
+}
+
+variable "dr_world_name" {
+  type = string
+}
+
+variable "dr_model_base_name" {
+  type = string
+}
+
+variable "dr_track_direction" {
+  type    = string
+  default = ""
+}
