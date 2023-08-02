@@ -133,8 +133,8 @@ _autorun() {
   DR_AWS_APP_REGION="$(aws configure get default.region)"
   DR_LOCAL_S3_PROFILE="default"
   DR_UPLOAD_S3_PROFILE="default"
-  DR_LOCAL_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-local"
-  DR_UPLOAD_S3_BUCKET="aws-deepracer-${ACCOUNT_ID}-upload"
+  DR_LOCAL_S3_BUCKET="dr-cloud-${ACCOUNT_ID}-local"
+  DR_UPLOAD_S3_BUCKET="dr-cloud-${ACCOUNT_ID}-upload"
   DR_DOCKER_STYLE="compose"
   DR_SAGEMAKER_IMAGE="${SAGEMAKER}-gpu"
   DR_ROBOMAKER_IMAGE="${ROBOMAKER}-cpu-avx2" # 5.0.1-gpu-gl
