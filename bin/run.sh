@@ -108,11 +108,11 @@ _autorun() {
     dr-increment-training -f
   fi
 
-  if [ "${DR_DIRECTION}" == "CW" ]; then
-    REVERSE_DIRECTION="True"
-    sed -i "s/\(^DR_EVAL_REVERSE_DIRECTION=\)\(.*\)/\1$REVERSE_DIRECTION/" run.env
-    sed -i "s/\(^DR_TRAIN_REVERSE_DIRECTION=\)\(.*\)/\1$REVERSE_DIRECTION/" run.env
-  fi
+  # if [ "${DR_DIRECTION}" == "CW" ]; then
+  #   REVERSE_DIRECTION="True"
+  #   sed -i "s/\(^DR_EVAL_REVERSE_DIRECTION=\)\(.*\)/\1$REVERSE_DIRECTION/" run.env
+  #   sed -i "s/\(^DR_TRAIN_REVERSE_DIRECTION=\)\(.*\)/\1$REVERSE_DIRECTION/" run.env
+  # fi
 
   CUR_MODEL_NAME=$(grep -e '^DR_LOCAL_S3_MODEL_PREFIX=' ./run.env | cut -d'=' -f2 | tail -n 1)
 
