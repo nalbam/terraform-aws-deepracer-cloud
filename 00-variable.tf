@@ -77,6 +77,22 @@ variable "desired" {
   default = 1
 }
 
+variable "on_demand_base" {
+  type    = number
+  default = 0
+}
+
+variable "on_demand_rate" {
+  type    = number
+  default = 100
+}
+
+variable "spot_strategy" {
+  type    = string
+  default = "capacity-optimized"
+  # lowest-price, capacity-optimized, capacity-optimized-prioritized, price-capacity-optimized
+}
+
 # variable "suspended_processes" {
 #   type = list(string)
 #   default = [

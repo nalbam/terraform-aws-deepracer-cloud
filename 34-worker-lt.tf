@@ -33,9 +33,9 @@ resource "aws_launch_template" "worker" {
     security_groups             = [aws_security_group.worker.id]
   }
 
-  instance_market_options {
-    market_type = var.market_type
-  }
+  # instance_market_options {
+  #   market_type = var.market_type
+  # }
 
   tag_specifications {
     resource_type = "instance"
