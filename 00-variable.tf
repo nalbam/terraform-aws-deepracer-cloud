@@ -103,7 +103,7 @@ variable "spot_strategy" {
 variable "ports" {
   type = list(string)
   default = [
-    "8100",
+    "8100", # <-- webviewer
     "8888",
     "8080",
     "8081",
