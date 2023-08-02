@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Log everything we do.
+set -x
+exec >/var/log/run-data.log 2>&1
+
 CMD=${1}
 
 AWS_RESION=$(aws configure get default.region)
