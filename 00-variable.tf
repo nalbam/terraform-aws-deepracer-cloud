@@ -15,6 +15,11 @@ variable "instance_type" {
   default = "g5.8xlarge"
 }
 
+variable "market_type" {
+  type    = string
+  default = "spot"
+}
+
 variable "ami_id" {
   type    = string
   default = "ami-0365f1c02d110fa96"

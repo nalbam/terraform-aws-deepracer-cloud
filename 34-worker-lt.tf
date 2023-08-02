@@ -34,7 +34,7 @@ resource "aws_launch_template" "worker" {
   }
 
   instance_market_options {
-    market_type = "spot"
+    market_type = var.market_type
   }
 
   tag_specifications {
