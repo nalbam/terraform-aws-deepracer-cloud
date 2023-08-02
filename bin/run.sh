@@ -2,7 +2,7 @@
 
 # Log everything we do.
 set -x
-exec >/var/log/run-data.log 2>&1
+exec >/tmp/run-data.log 2>&1
 
 CMD=${1}
 
