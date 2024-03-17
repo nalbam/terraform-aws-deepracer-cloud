@@ -89,7 +89,7 @@ variable "on_demand_rate" {
 
 variable "spot_strategy" {
   type    = string
-  default = "capacity-optimized"
+  default = "price-capacity-optimized"
   # lowest-price, capacity-optimized, capacity-optimized-prioritized, price-capacity-optimized
 }
 
